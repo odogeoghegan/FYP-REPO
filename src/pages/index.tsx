@@ -1,10 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
 import Header from "../../components/Header";
+import RecipeTile from "../../components/RecipeTile";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -15,12 +17,14 @@ const Home: NextPage = () => {
         <title>My FYP</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-        {/* Header */}
+      {/* Header */}
         <Header />
+        <div className="font-bold text-lg">Recipes</div>
+        <button className="rounded-md bg-blue-400">Add Recipe</button>
         {/* Feed */}
-        
+        <RecipeTile title="Spanish Omlette" author="John Doe"/>
+        <RecipeTile title="Salmon Surprise" author="Mary Smith"/>
         {/* Modal Buttons */}
-
     </>
   );
 };

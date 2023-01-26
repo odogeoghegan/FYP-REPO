@@ -59,6 +59,12 @@ model User {
   sessions      Session[]
 }
 
+model Post {
+  id            String    @id @default(cuid())     
+  title         String 
+  description   String 
+}
+
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -66,3 +72,5 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+
