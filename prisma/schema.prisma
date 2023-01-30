@@ -1,39 +1,25 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider          = "postgresql"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -49,20 +35,59 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
-  signupDate    DateTime  @default(now())
+  signupDate    DateTime      @default(now())
   image         String?
   accounts      Account[]
+  followings    Follower[]    @relation("UserFollowing")
+  followers     Follower[]    @relation("UserFollower")
+  posts         Post[]
+  comments      PostComment[]
+  likes         PostLike[]
   sessions      Session[]
 }
 
 model Post {
-  id            String    @id @default(cuid())     
-  title         String 
-  description   String 
+  id          String        @id @default(cuid())
+  caption     String
+  description String?
+  images      String[]
+  authorId    String
+  createdAt   DateTime      @default(now())
+  author      User          @relation(fields: [authorId], references: [id])
+  comments    PostComment[]
+  likes       PostLike[]
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model PostComment {
+  id        String   @id @default(cuid())
+  postId    String
+  comment   String
+  authorId  String
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+  POST      Post     @relation(fields: [postId], references: [id])
+}
+
+model Follower {
+  id         String   @id @default(cuid())
+  userId     String
+  followerId String
+  createdAt  DateTime @default(now())
+  follower   User     @relation("UserFollowing", fields: [followerId], references: [id])
+  user       User     @relation("UserFollower", fields: [userId], references: [id])
 }
 
 model VerificationToken {
@@ -73,4 +98,10 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-
+model Example {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name       String
+  message    String	  @db.VarChar(100)
+  }

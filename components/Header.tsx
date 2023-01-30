@@ -8,24 +8,24 @@ import {
 
 function Header() {
   return (
-    <div>
+    <div className="shadow-sm border-b bg-white sticky top-0 z-50">
       <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
 
         {/* Left */}
         <div className="relative hidden justify-start lg:inline-grid w-52 cursor-pointer">
           <Image
             alt="logo"
-            src="/Munchies-Logo.png"
+            src="/Munchies-Logo-New.png"
             fill
             style={{
               objectFit: "contain"
             }} />
         </div>
 
-        <div className="relative w-10 lg:hidden flex-shrink-0 cursor-pointer">
+        <div className="relative w-10 lg:hidden flex-shrink-0 cursor-pointer ">
           <Image
             alt="logo"
-            src="/Munchies-Icon.png"
+            src="/Munchies-Icon-New.png"
             fill
             style={{
               objectFit: "contain"
@@ -52,8 +52,6 @@ function Header() {
           <BiPlusCircle className="navBtn" size="30"/>
           <BiGroup className="navBtn" size="30"/>
           <BiCookie className="navBtn" size="30"/>
-
-
           
         </div>
       </div>
