@@ -90,14 +90,6 @@ model Follower {
   user       User     @relation("UserFollower", fields: [userId], references: [id])
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
 model Example {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -105,3 +97,12 @@ model Example {
   name       String
   message    String	  @db.VarChar(100)
   }
+
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
