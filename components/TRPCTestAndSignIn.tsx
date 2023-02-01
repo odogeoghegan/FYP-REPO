@@ -15,7 +15,7 @@ function TRPCTestAndSignIn() {
       <AuthShowcase />
     </div>
   );
-};
+}
 
 export default TRPCTestAndSignIn
 
