@@ -62,6 +62,9 @@ model Post {
   likes       PostLike[]
 }
 
+// Images Table:  Image ID, POST ID, TITLE, ORDER
+
+
 model PostLike {
   id        String   @id @default(cuid())
   userId    String
@@ -93,7 +96,7 @@ model Follower {
 model Example {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt  DateTime @updatedAt
   name       String
   message    String	  @db.VarChar(100)
   }

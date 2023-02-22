@@ -5,7 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "../src/utils/api";
 
 function TRPCTestAndSignIn() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const hello = api.example.hello.useQuery({ text: "from Munchies Team" });
   return (
     
     <div className="flex flex-col items-center gap-2">
@@ -13,6 +13,8 @@ function TRPCTestAndSignIn() {
         {hello.data ? hello.data.greeting : "Loading tRPC query..."}
       </p>
       <AuthShowcase />
+      <Form />
+      <Posts />
     </div>
   );
 }
@@ -42,3 +44,77 @@ const AuthShowcase: React.FC = () => {
     </div>
   );
 };
+
+const Form: React.FC = () => {
+  const [message, setMessage] = React.useState("");
+  const { data: session, status } = useSession();
+
+  const utils = api.useContext();
+  const postMessage = api.post.createPost.useMutation({
+    onMutate: async (newEntry) => {
+      await utils.post.getAll.cancel();
+      utils.post.getAll.setData(undefined, (prevEntries) => {
+        if (prevEntries) {
+          return [newEntry, ...prevEntries];
+        } else {
+          return [newEntry];
+        }
+      });
+    },
+    onSettled: async () => {
+      await utils.post.getAll.invalidate();
+    },
+  });
+
+  return status === "authenticated" ? (
+    <form
+      className="flex gap-2"
+      onSubmit={(event) => {
+        event.preventDefault();
+        postMessage.mutate({
+          name: session.user?.name as string,
+          message,
+        });
+        setMessage("");
+      }}
+    >
+      <input
+        type="text"
+        className="rounded-md border-2 border-zinc-800 bg-gray-300  px-4 py-2 focus:outline-none"
+        placeholder="Your message..."
+        minLength={2}
+        maxLength={100}
+        value={message}
+        onChange={(event) => setMessage(event.target.value)}
+      />
+      <button
+        type="submit"
+        className="rounded-md border-2 border-zinc-800 p-2 focus:outline-none"
+      >
+        Submit
+      </button>
+    </form>
+  ) : null;
+};
+
+const Posts: React.FC = () => {
+  const { data: post, isLoading } = api.post.getAll.useQuery();
+
+  if (isLoading) {
+    return <div>Fetching messages...</div>;
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {post?.map((entry, index) => (
+        <div key={index}>
+          <p>{entry.message}</p>
+          <span>- {entry.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+
+

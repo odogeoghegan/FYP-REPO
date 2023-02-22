@@ -7,6 +7,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "../utils/api";
 import Header from "../../components/Header";
 import TRPCTestAndSignIn from "../../components/TRPCTestAndSignIn";
+import CreateModal from "../../components/CreateModal";
 
 const Home: NextPage = () => {
   return (
@@ -19,6 +20,8 @@ const Home: NextPage = () => {
       <Header />
       {/* Feed */}
       <TRPCTestAndSignIn />
+
+      <CreateModal/>
     </>
   );
 };
