@@ -9,24 +9,26 @@ import {
 
 function CreateModal() {
   const [open, setOpen] = useRecoilState(modalState);
-  const filePickerRef = useRef(null);
-  const captionRef = useRef(null);
+  const filePickerRef = useRef<HTMLInputElement>(null);
+  const captionRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<null | string>(null);
 
   //testing recipes form
   const [postType, setPostType] = useState('basic');
   const [ingredients, setIngredients] = useState([""]);
   const [steps, setSteps] = useState([""])
 
-  const addImageToPost = (e: { target: { files: Blob[]; }; }) => {
+  const addImageToPost = (e: any) => {
     const reader = new FileReader();
     if (e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0]);
     }
 
     reader.onload = (readerEvent) => {
-      setSelectedFile(readerEvent.target.result);
+      if (readerEvent.target){
+        setSelectedFile(readerEvent.target.result as string);
+      }
     }
   }
 
@@ -40,7 +42,7 @@ function CreateModal() {
   };
 
   const handleSubmit = () => {
-    const caption = captionRef.current.value;
+    const caption = captionRef.current?.value;
     if (postType === 'basic') {
       // handle basic post submission
     } else if (postType === 'recipe') {
@@ -87,7 +89,7 @@ function CreateModal() {
             {selectedFile ? (
               <img src={selectedFile} className="w-full object-contain cursor-pointer" onClick={() => setSelectedFile(null)} alt="" />
             ) : (
-              <div onClick={() => filePickerRef.current.click()} className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 cursor-pointer">
+              <div onClick={() => filePickerRef.current?.click()} className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 cursor-pointer">
                 <BiCamera className="h-6 w-6 text-indigo-600" aria-hidden="true" />
               </div>
             )}
