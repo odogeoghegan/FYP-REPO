@@ -60,6 +60,15 @@ model Post {
   author      User          @relation(fields: [authorId], references: [id])
   comments    PostComment[]
   likes       PostLike[]
+  recipe      Recipe?
+}
+
+model Recipe {
+  id          String  @id @default(cuid())
+  postId      String  @unique
+  ingredients String[]
+  steps       String[]
+  post        Post    @relation(fields: [postId], references: [id])
 }
 
 model PostLike {

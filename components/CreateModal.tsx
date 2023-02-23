@@ -3,9 +3,9 @@ import { useRecoilState } from "recoil";
 import { modalState } from '../atoms/modalAtom';
 import { Dialog, Transition } from '@headlessui/react';
 import {
-  BiCamera
+  BiCamera, BiPlus
 } from "react-icons/bi";
-
+ import { SupabaseClient } from '@supabase/supabase-js';
 
 function CreateModal() {
   const [open, setOpen] = useRecoilState(modalState);
@@ -17,8 +17,10 @@ function CreateModal() {
   //testing recipes form
   const [postType, setPostType] = useState('basic');
   const [ingredients, setIngredients] = useState([""]);
-  const [steps, setSteps] = useState([""])
+  const [steps, setSteps] = useState([""]);
 
+  const supabase = SupabaseClient;
+  
   const addImageToPost = (e: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
     if (e.target.files && e.target.files[0]) {
@@ -26,7 +28,7 @@ function CreateModal() {
     }
 
     reader.onload = (readerEvent) => {
-      if (readerEvent.target){
+      if (readerEvent.target) {
         setSelectedFile(readerEvent.target?.result as string);
       }
     }
@@ -84,13 +86,13 @@ function CreateModal() {
             {postType === "basic" && (
               <div className="flex flex-row justify-center mb-4">
                 <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
-                <button className=" bg-yellow-200 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
+                <button className=" bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
               </div>
             )}
 
             {postType === "recipe" && (
               <div className="flex flex-row justify-center mb-4">
-                <button className="bg-yellow-200 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
+                <button className="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
                 <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
               </div>
             )}
@@ -113,7 +115,7 @@ function CreateModal() {
                   <input ref={filePickerRef} type="file" hidden onChange={addImageToPost} />
                 </div>
                 <div className="mt-2">
-                  <input className="border-none focus:ring-0 w-full text-center" type="text" /* ref={captionRef} */ placeholder="Please enter a caption..." />
+                  <input className="border-none focus:ring-0 w-full text-center bg-gray-100 rounded-lg" type="text" /* ref={captionRef} */ placeholder="Please enter a caption..." />
                 </div>
 
                 {postType === "recipe" && (
@@ -122,7 +124,7 @@ function CreateModal() {
                     {ingredients.map((ingredient, index) => (
                       <div key={index} className="flex">
                         <input
-                          className="border-none focus:ring-0 w-full"
+                          className="border-none bg-gray-100 rounded-lg mr-2 focus:ring-0 w-full"
                           type="text"
                           value={ingredient}
                           placeholder={`Ingredient ${index + 1}`}
@@ -133,13 +135,9 @@ function CreateModal() {
                           }}
                         />
                         {index === ingredients.length - 1 && (
-                          <button
-                            type="button"
-                            className="ml-2 px-3 py-1 bg-orange-500 text-black rounded-md hover:bg-orange-600"
-                            onClick={addIngredient}
-                          >
-                            Add
-                          </button>
+                          <div onClick={addIngredient} className="m-auto flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
+                            <BiPlus className="h-6 w-6 text-center text-orange-500" aria-hidden="true" />
+                          </div>
                         )}
                       </div>
                     ))}
@@ -148,32 +146,28 @@ function CreateModal() {
 
                 {postType === "recipe" && (
                   <div className="mt-4">
-                  <h4 className="text-lg font-medium mb-2">Steps</h4>
-                  {steps.map((step, index) => (
-                    <div key={index} className="flex">
-                      <input
-                        className="border-none focus:ring-0 w-full"
-                        type="text"
-                        value={step}
-                        placeholder={`Step ${index + 1}`}
-                        onChange={(event) => {
-                          const newSteps = [...steps];
-                          newSteps[index] = event.target.value;
-                          setSteps(newSteps);
-                        }}
-                      />
-                      {index === steps.length - 1 && (
-                        <button
-                          type="button"
-                          className="ml-2 px-3 py-1 bg-orange-500 text-black rounded-md hover:bg-orange-600"
-                          onClick={addStep}
-                        >
-                          Add
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                    <h4 className="text-lg font-medium mb-2">Steps</h4>
+                    {steps.map((step, index) => (
+                      <div key={index} className="flex">
+                        <input
+                          className="border-none focus:ring-0 bg-gray-100 rounded-lg mr-2 w-full"
+                          type="text"
+                          value={step}
+                          placeholder={`Step ${index + 1}`}
+                          onChange={(event) => {
+                            const newSteps = [...steps];
+                            newSteps[index] = event.target.value;
+                            setSteps(newSteps);
+                          }}
+                        />
+                        {index === steps.length - 1 && (
+                          <div onClick={addStep} className="m-auto flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
+                            <BiPlus className="h-6 w-6 text-center text-orange-500" aria-hidden="true" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
 
               </div>
