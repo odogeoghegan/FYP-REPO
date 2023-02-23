@@ -19,9 +19,9 @@ function CreateModal() {
   const [ingredients, setIngredients] = useState([""]);
   const [steps, setSteps] = useState([""])
 
-  const addImageToPost = (e: any) => {
+  const addImageToPost = (e: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
-    if (e.target.files[0]) {
+    if (e.target.files && e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0]);
     }
 
