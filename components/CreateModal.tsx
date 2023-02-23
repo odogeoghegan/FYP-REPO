@@ -81,22 +81,31 @@ function CreateModal() {
         >
 
           <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-            <div className="flex flex-row justify-center mb-4">
-              <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
-              <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
-            </div>
+            {postType === "basic" && (
+              <div className="flex flex-row justify-center mb-4">
+                <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
+                <button className=" bg-yellow-200 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
+              </div>
+            )}
+
+            {postType === "recipe" && (
+              <div className="flex flex-row justify-center mb-4">
+                <button className="bg-yellow-200 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
+                <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
+              </div>
+            )}
 
             {selectedFile ? (
               <img src={selectedFile} className="w-full object-contain cursor-pointer" onClick={() => setSelectedFile(null)} alt="" />
             ) : (
-              <div onClick={() => filePickerRef.current?.click()} className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 cursor-pointer">
-                <BiCamera className="h-6 w-6 text-indigo-600" aria-hidden="true" />
+              <div onClick={() => filePickerRef.current?.click()} className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 cursor-pointer">
+                <BiCamera className="h-6 w-6 text-orange-500" aria-hidden="true" />
               </div>
             )}
 
             <div>
               <div className="mt-3 text-center sm:mt-5">
-                <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
+                <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-black">
                   Upload a photo
                 </Dialog.Title>
 
@@ -126,7 +135,7 @@ function CreateModal() {
                         {index === ingredients.length - 1 && (
                           <button
                             type="button"
-                            className="ml-2 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                            className="ml-2 px-3 py-1 bg-orange-500 text-black rounded-md hover:bg-orange-600"
                             onClick={addIngredient}
                           >
                             Add
@@ -156,7 +165,7 @@ function CreateModal() {
                       {index === steps.length - 1 && (
                         <button
                           type="button"
-                          className="ml-2 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-3 py-1 bg-orange-500 text-black rounded-md hover:bg-orange-600"
                           onClick={addStep}
                         >
                           Add
@@ -170,7 +179,7 @@ function CreateModal() {
               </div>
 
               <div className="mt-5 sm:mt:-6">
-                <button type="button" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300">
+                <button type="button" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-500 text-base font-medium text-black hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300">
                   Upload Post
                 </button>
               </div>
