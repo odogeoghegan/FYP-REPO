@@ -6,6 +6,7 @@ import {
   BiCamera
 } from "react-icons/bi";
 
+
 function CreateModal() {
   const [open, setOpen] = useRecoilState(modalState);
   const filePickerRef = useRef(null);
@@ -18,7 +19,7 @@ function CreateModal() {
   const [ingredients, setIngredients] = useState([""]);
   const [steps, setSteps] = useState([""])
 
-  const addImageToPost = (e) => {
+  const addImageToPost = (e: { target: { files: Blob[]; }; }) => {
     const reader = new FileReader();
     if (e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0]);
