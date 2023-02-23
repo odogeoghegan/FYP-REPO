@@ -27,7 +27,7 @@ function CreateModal() {
 
     reader.onload = (readerEvent) => {
       if (readerEvent.target){
-        setSelectedFile(readerEvent.target.result as string);
+        setSelectedFile(readerEvent.target?.result as string);
       }
     }
   }
