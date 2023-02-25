@@ -50,10 +50,10 @@ const Form: React.FC = () => {
   const { data: session, status } = useSession();
 
   const utils = api.useContext();
-  const postMessage = api.post.createPost.useMutation({
+  const postMessage = api.example.createTest.useMutation({
     onMutate: async (newEntry) => {
-      await utils.post.getAll.cancel();
-      utils.post.getAll.setData(undefined, (prevEntries) => {
+      await utils.example.getAllTest.cancel();
+      utils.example.getAllTest.setData(undefined, (prevEntries) => {
         if (prevEntries) {
           return [newEntry, ...prevEntries];
         } else {
@@ -62,7 +62,7 @@ const Form: React.FC = () => {
       });
     },
     onSettled: async () => {
-      await utils.post.getAll.invalidate();
+      await utils.example.getAllTest.invalidate();
     },
   });
 
@@ -98,7 +98,7 @@ const Form: React.FC = () => {
 };
 
 const Posts: React.FC = () => {
-  const { data: post, isLoading } = api.post.getAll.useQuery();
+  const { data: post, isLoading } = api.example.getAllTest.useQuery();
 
   if (isLoading) {
     return <div>Fetching messages...</div>;

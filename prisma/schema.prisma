@@ -52,7 +52,7 @@ model User {
 
 model Post {
   id          String        @id @default(cuid())
-  caption     String
+  caption     String        @db.VarChar(100)
   description String?
   images      String[]
   authorId    String
