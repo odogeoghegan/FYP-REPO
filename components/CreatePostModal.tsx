@@ -17,7 +17,7 @@ import { PrismaClient } from '@prisma/client';
 function CreatePostModal() {
   const [open, setOpen] = useRecoilState(modalState);
   const filePickerRef = React.useRef<HTMLInputElement>(null);
-  const captionRef = React.useRef<HTMLInputElement>(null);
+  const titleRef = React.useRef<HTMLInputElement>(null);
   const [loading, setLoading] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState("");
 
@@ -38,7 +38,7 @@ function CreatePostModal() {
 export default CreatePostModal
 
 const CreatePost: React.FC = () => {
-  const [caption, setCaption] = React.useState("");
+  const [title, setTitle] = React.useState("");
   const { data: session, status } = useSession();
 
   const [open, setOpen] = useRecoilState(modalState);
@@ -60,6 +60,8 @@ const CreatePost: React.FC = () => {
       if (readerEvent.target) {
         setSelectedFile(readerEvent.target?.result as string);
       }
+      console.log(selectedFile);
+      
     }
   }
 
@@ -76,13 +78,7 @@ const CreatePost: React.FC = () => {
   const uploadPost = api.post.create.useMutation({
     onMutate: async (newEntry) => {
       await utils.post.getAll.cancel();
-      utils.post.getAll.setData(undefined, (prevEntries) => {
-        if (prevEntries) {
-          return [newEntry, ...prevEntries];
-        } else {
-          return [newEntry];
-        }
-      });
+      console.log("Added new entry: " + newEntry.title);
     },
     onSettled: async () => {
       await utils.post.getAll.invalidate();
@@ -90,7 +86,6 @@ const CreatePost: React.FC = () => {
   });
 
   return status === "authenticated" ? (
-
 
     <Transition.Root show={open} as={Fragment}>
       <Dialog as='div' className='fixed z-10 inset-0 overflow-y-auto' onClose={setOpen}>
@@ -125,9 +120,9 @@ const CreatePost: React.FC = () => {
               e.preventDefault();
               uploadPost.mutate({
                 authorId: session.user?.id as string,
-                caption,
+                title,
               });
-              setCaption("");
+              setTitle("");
             }}
             >
 
@@ -164,7 +159,7 @@ const CreatePost: React.FC = () => {
                       <input ref={filePickerRef} type="file" hidden onChange={addImageToPost} />
                     </div>
                     <div className="mt-2">
-                      <input className="border-none focus:ring-0 w-full text-center bg-gray-100 rounded-lg" type="text" placeholder="Please enter a caption..." minLength={2} maxLength={100} value={caption} onChange={(e) => setCaption(e.target.value)} />
+                      <input className="border-none focus:ring-0 w-full text-center bg-gray-100 rounded-lg" type="text" placeholder="Please enter a title..." minLength={2} maxLength={100} value={title} onChange={(e) => setTitle(e.target.value)} />
                     </div>
 
                     {postType === "recipe" && (

@@ -6,13 +6,12 @@ export const postRouter = createTRPCRouter({
     getAll: publicProcedure.query(async ({ ctx }) => {
         try {
             return await ctx.prisma.post.findMany({
-                select: {
-                    authorId: true,
-                    caption: true,
-                },
                 orderBy: {
-                    createdAt: "desc",
+                    createdAt: "desc"
                 },
+                include: {
+                    author: true, // Return all related author fields
+                  },
             });
         }
         catch (error) {
@@ -25,7 +24,7 @@ export const postRouter = createTRPCRouter({
     create: protectedProcedure
         .input(
             z.object({
-                caption: z.string(),
+                title: z.string(),
                 authorId: z.string(),
             })
         )
@@ -33,8 +32,8 @@ export const postRouter = createTRPCRouter({
             try {
                 await ctx.prisma.post.create({
                     data: {
-                        caption:  input.caption,
-                        authorId: input.authorId
+                        title:  input.title,
+                        authorId: input.authorId,
                     }
                 })
             }

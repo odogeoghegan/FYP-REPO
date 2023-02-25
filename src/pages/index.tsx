@@ -24,7 +24,7 @@ const Home: NextPage = () => {
       <Header />
       {/* Feed */}
 
-      {/* <TRPCTestAndSignIn /> */}
+      <TRPCTestAndSignIn />
 
       <Feed />
 

@@ -99,7 +99,7 @@ export interface Database {
       Post: {
         Row: {
           authorId: string
-          caption: string
+          title: string
           createdAt: string
           description: string | null
           id: string
@@ -107,7 +107,7 @@ export interface Database {
         }
         Insert: {
           authorId: string
-          caption: string
+          title: string
           createdAt?: string
           description?: string | null
           id: string
@@ -115,7 +115,7 @@ export interface Database {
         }
         Update: {
           authorId?: string
-          caption?: string
+          title?: string
           createdAt?: string
           description?: string | null
           id?: string

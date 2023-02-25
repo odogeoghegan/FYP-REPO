@@ -10,7 +10,7 @@ datasource db {
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String
+  userId            String  
   type              String
   provider          String
   providerAccountId String
@@ -52,7 +52,7 @@ model User {
 
 model Post {
   id          String        @id @default(cuid())
-  caption     String        @db.VarChar(100)
+  title     String        @db.VarChar(100)
   description String?
   images      String[]
   authorId    String

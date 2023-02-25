@@ -26,8 +26,8 @@ const Posts: React.FC = () => {
     <div className="flex flex-col gap-4">
       {post?.map((entry, index) => (
         <div key={index}>
-          <p>{entry.caption}</p>
-          <span>- {entry.authorId}</span>
+          <p>{entry.title}</p>
+          <span>- {entry.author.name}  (<i>{entry.createdAt.toUTCString()}</i>)</span>
         </div>
       ))}
     </div>
