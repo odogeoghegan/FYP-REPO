@@ -14,14 +14,7 @@ function SignIn({ providers }: SignInProps) {
         <div className='mt-8'>
           {Object.values(providers).map((provider) => (
             <div key={provider.name}>
-              <button className="p-3 bg-orange-500 rounded-lg text-black font-bold" onClick={async () => {
-                try {
-                  await SignIntoProvider(provider.id, { callbackUrl: "/" });
-                  // Handle the successful response here
-                } catch (error) {
-                  // Handle the error here
-                }
-              }}>
+              <button className="p-3 bg-orange-500 rounded-lg text-black font-bold" onClick={() => {void SignIntoProvider(provider.id, { callbackUrl: "/" })}}>
                 Sign in with {provider.name}
               </button>
             </div>
