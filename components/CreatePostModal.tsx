@@ -61,7 +61,7 @@ const CreatePost: React.FC = () => {
       if (readerEvent.target) {
         setSelectedFile(readerEvent.target?.result as string);
       }
-      console.log(selectedFile);
+      
 
     }
   }
@@ -140,6 +140,7 @@ const CreatePost: React.FC = () => {
                   title,
                 });
                 setTitle("");
+                setOpen(false);
               }}
               >
 

@@ -3,14 +3,17 @@ import React from 'react';
 import _app from "../src/pages";
 import { useRecoilState } from "recoil";
 import { modalState } from "../atoms/modalAtom";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 import {
   BiCookie, BiSearch, BiUser, BiSend, BiShare, BiPaperPlane, BiMessage, BiMenu, BiGroup,BiHome,BiPlusCircle
 } from "react-icons/bi";
 
 
+
 function Header() {
   const [open, setOpen] = useRecoilState(modalState);
+  const { data: session, status } = useSession();
 
 
   return (
@@ -54,12 +57,18 @@ function Header() {
         <div className="flex items-center justify-end space-x-4">
           <BiMenu className="h-10 md:hidden cursor-pointer hover:scale-150 transition-all duration-150 ease-out" size="30"/>
           <BiHome className="navBtn" size="30"/>
+          {session ? (
+          <>
           <BiPaperPlane className="navBtn" size="30"/>
           <BiPlusCircle onClick={() => setOpen(true)} className="navBtn" size="30"/>
           <BiGroup className="navBtn" size="30"/>
           <BiCookie className="navBtn" size="30"/>
-          
-        </div>
+          <img onClick={() => void signOut()} src={session?.user?.image ?? "" } alt="profile picture" className="h-10 w-10 rounded-full cursor-pointer" />
+          </>
+          ) : (
+            <button onClick={() => void signIn()}>Sign In</button>
+          )}
+          </div>
       </div>
     </div>
 
