@@ -28,7 +28,7 @@ const Posts: React.FC = () => {
         <div key={index}>
           <h2>{entry.title}</h2>
           <span>
-            <img width='15' src={"" + entry.author.image}></img>
+            <img width='15' src={entry.author.image ?? "" } alt=""/>
           {entry.author.name}  (<i>{entry.createdAt.toUTCString()}</i>)</span>
         </div>
       ))}
