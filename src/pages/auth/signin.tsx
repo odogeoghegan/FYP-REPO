@@ -1,4 +1,4 @@
-import { getProviders, useSession, signIn as SignIntoProvider } from 'next-auth/react'
+import { getProviders, signIn as SignIntoProvider } from 'next-auth/react'
 import React from 'react'
 
 type SignInProps = {
@@ -14,7 +14,7 @@ function SignIn({ providers }: SignInProps) {
         <div className='mt-8'>
           {Object.values(providers).map((provider) => (
             <div key={provider.name}>
-              <button className="p-3 bg-orange-500 rounded-lg text-black font-bold" onClick={() => {void SignIntoProvider(provider.id, { callbackUrl: "/" })}}>
+              <button className="p-3 bg-orange-500 rounded-lg text-black font-bold" onClick={() => void SignIntoProvider(provider.id, { callbackUrl: "/" })}>
                 Sign in with {provider.name}
               </button>
             </div>

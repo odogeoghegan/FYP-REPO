@@ -63,7 +63,7 @@ function Header() {
           <BiPlusCircle onClick={() => setOpen(true)} className="navBtn" size="30"/>
           <BiGroup className="navBtn" size="30"/>
           <BiCookie className="navBtn" size="30"/>
-          <img onClick={() => void signOut()} src={session?.user?.image ?? "" } alt="profile picture" className="h-10 w-10 rounded-full cursor-pointer" />
+          <img onClick={() => void signOut()} src={session?.user?.image ?? "" } alt="profile picture" className="h-10 w-10 rounded-full cursor-pointer outline outline-2 outline-black" />
           </>
           ) : (
             <button onClick={() => void signIn()}>Sign In</button>
