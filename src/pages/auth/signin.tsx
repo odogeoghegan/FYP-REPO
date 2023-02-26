@@ -1,4 +1,4 @@
-import { getProviders, useSession, signIn as SignIntoProvider } from 'next-auth/react'
+import { getProviders, signIn as SignIntoProvider } from 'next-auth/react'
 import React from 'react'
 
 type SignInProps = {
