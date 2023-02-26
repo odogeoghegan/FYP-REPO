@@ -31,6 +31,7 @@ function CreatePostModal() {
   }
 
   return (
+
     <CreatePost />
   )
 }
@@ -61,7 +62,7 @@ const CreatePost: React.FC = () => {
         setSelectedFile(readerEvent.target?.result as string);
       }
       console.log(selectedFile);
-      
+
     }
   }
 
@@ -116,30 +117,31 @@ const CreatePost: React.FC = () => {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              uploadPost.mutate({
-                authorId: session.user?.id as string,
-                title,
-              });
-              setTitle("");
-            }}
-            >
 
-              <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-                {postType === "basic" && (
-                  <div className="flex flex-row justify-center mb-4">
-                    <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
-                    <button className=" bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
-                  </div>
-                )}
+            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+              {postType === "basic" && (
+                <div className="flex flex-row justify-center mb-4">
+                  <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
+                  <button className=" bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
+                </div>
+              )}
 
-                {postType === "recipe" && (
-                  <div className="flex flex-row justify-center mb-4">
-                    <button className="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
-                    <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
-                  </div>
-                )}
+              {postType === "recipe" && (
+                <div className="flex flex-row justify-center mb-4">
+                  <button className="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded-l" onClick={() => setPostType("basic")}>Basic Post</button>
+                  <button className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded-r" onClick={() => setPostType("recipe")}>Recipe Post</button>
+                </div>
+              )}
+
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                uploadPost.mutate({
+                  authorId: session.user?.id as string,
+                  title,
+                });
+                setTitle("");
+              }}
+              >
 
                 {selectedFile ? (
                   <img src={selectedFile} className="w-full object-contain cursor-pointer" onClick={() => setSelectedFile("")} alt="" />
@@ -223,8 +225,9 @@ const CreatePost: React.FC = () => {
                   </div>
 
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
+
 
           </Transition.Child>
 

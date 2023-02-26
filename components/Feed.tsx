@@ -26,8 +26,10 @@ const Posts: React.FC = () => {
     <div className="flex flex-col gap-4">
       {post?.map((entry, index) => (
         <div key={index}>
-          <p>{entry.title}</p>
-          <span>- {entry.author.name}  (<i>{entry.createdAt.toUTCString()}</i>)</span>
+          <h2>{entry.title}</h2>
+          <span>
+            <img width='15' src={"" + entry.author.image}></img>
+          {entry.author.name}  (<i>{entry.createdAt.toUTCString()}</i>)</span>
         </div>
       ))}
     </div>
