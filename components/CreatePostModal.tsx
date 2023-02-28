@@ -198,14 +198,10 @@ const CreatePost: React.FC = () => {
                 </div>
               )}
 
-              <form onSubmit={async (e) => {
+              <form onSubmit={(e) => {
                 e.preventDefault();
-                try {
-                  await handleSubmit(e);
-                  setOpen(false);
-                } catch (error) {
-                  // handle error here
-                }
+                handleSubmit(e);
+                setOpen(false);
               }}
               >
 
