@@ -32,7 +32,7 @@ const CreatePost: React.FC = () => {
   const filePickerRef = React.useRef<HTMLInputElement>(null);
   const [loading, setLoading] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState("");
-  const [imageForUpload, setImageForUpload] = React.useState<File | null>(null);;
+  const [imageForUpload, setImageForUpload] = React.useState<File | null>(null);
 
   //testing recipes form
   const [postType, setPostType] = useState('basic');
@@ -58,7 +58,7 @@ const CreatePost: React.FC = () => {
     try {
       const { data, error } = await supabase.storage
         .from('public/images')
-        .upload(session?.user?.id + "/" + uuidv4(), file);
+        .upload(session?.user?.id as string + "/" + uuidv4(), file);
 
       if (error) {
         throw error;
@@ -200,7 +200,9 @@ const CreatePost: React.FC = () => {
 
               <form onSubmit={async (e) => {
                 e.preventDefault();
-                handleSubmit(e);
+                await handleSubmit(e).catch((error) => {
+                  // handle error here
+                });
                 setOpen(false);
               }}
               >
