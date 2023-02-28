@@ -202,10 +202,10 @@ const CreatePost: React.FC = () => {
                 e.preventDefault();
                 try {
                   await handleSubmit(e);
+                  setOpen(false);
                 } catch (error) {
                   // handle error here
                 }
-                setOpen(false);
               }}
               >
 
