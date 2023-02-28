@@ -128,27 +128,30 @@ const CreatePost: React.FC = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (imageForUpload) {
-      try {
+    try {
+      e.preventDefault();
+      if (imageForUpload) {
         const publicUrl = await uploadImageToBucket(imageForUpload);
         // Do something with the image URL, like save it to a database
         console.log("File uploaded successfully:", publicUrl);
-      } catch (error) {
-        console.error("Error uploading file:", error);
       }
-    }
-    uploadPost.mutate({
-      authorId: session?.user?.id as string,
-      title,
-      ingredients,
-      steps,
-    });
+      await uploadPost.mutateAsync({
+        authorId: session?.user?.id as string,
+        title,
+        ingredients,
+        steps,
+      });
 
-    setTitle("");
-    setSelectedFile("");
-    setIngredients([""]);
-    setSteps([""]);
+      setTitle("");
+      setSelectedFile("");
+      setIngredients([""]);
+      setSteps([""]);
+
+      return true; // or whatever value you want to return
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      throw error; // re-throw the error so it can be caught by the caller
+    }
   };
 
   return status === "authenticated" ? (
@@ -198,12 +201,15 @@ const CreatePost: React.FC = () => {
                 </div>
               )}
 
-              <form onSubmit={(e) => {
+              <form onSubmit={async (e) => {
                 e.preventDefault();
-                handleSubmit(e);
-                setOpen(false);
-              }}
-              >
+                try {
+                  await handleSubmit(e);
+                  setOpen(false);
+                } catch (error) {
+                  // handle error here
+                }
+              }}>
 
                 {selectedFile ? (
                   <img src={selectedFile} className="w-full object-contain cursor-pointer" onClick={() => setSelectedFile("")} alt="" />
