@@ -209,6 +209,7 @@ const CreatePost: React.FC = () => {
                 } catch (error) {
                   // handle error here
                 }
+                return void 0; // explicitly return void to satisfy the no-misused-promises rule
               }}>
 
                 {selectedFile ? (
