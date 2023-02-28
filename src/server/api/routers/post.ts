@@ -22,24 +22,41 @@ export const postRouter = createTRPCRouter({
 
 
     create: protectedProcedure
-        .input(
-            z.object({
-                title: z.string(),
-                authorId: z.string(),
-            })
-        )
-        .mutation(async ({ ctx, input }) => {
-            try {
-                await ctx.prisma.post.create({
-                    data: {
-                        title:  input.title,
-                        authorId: input.authorId,
-                    }
-                })
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }),
+    .input(
+        z.object({
+            title: z.string(),
+            authorId: z.string(),
+            description: z.string().optional(),
+            images: z.array(z.string()).optional(),
+            ingredients: z.array(z.string()).optional(),
+            steps: z.array(z.string()).optional(),
+        })
+    )
+    .mutation(async ({ ctx, input }) => {
+        try {
+            const post = await ctx.prisma.post.create({
+                data: {
+                    title:  input.title,
+                    authorId: input.authorId,
+                    description: input.description,
+                    images: input.images,
+                    recipe: {
+                        create: {
+                            ingredients: input.ingredients || [],
+                            steps: input.steps || [],
+                        },
+                    },
+                },
+                include: {
+                    recipe: true,
+                },
+            });
+
+            return post;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }),
 
 })

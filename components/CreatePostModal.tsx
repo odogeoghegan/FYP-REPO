@@ -1,12 +1,12 @@
 import React, { Fragment, useRef, useState } from 'react'
 import _app from "../src/pages";
-import { useRecoilState } from "recoil";
+import { selector, useRecoilState } from "recoil";
 import { modalState } from '../atoms/modalAtom';
 import { Dialog, Transition } from '@headlessui/react';
 import { useSession } from "next-auth/react";
 import { v4 as uuidv4 } from "uuid";
 import {
-  BiCamera, BiPlus
+  BiCamera, BiPlus, BiMinus
 } from "react-icons/bi";
 import { api } from "../src/utils/api";
 import { supabase } from '../src/server/supabase';
@@ -14,24 +14,10 @@ import { PrismaClient } from '@prisma/client';
 
 
 
+
 function CreatePostModal() {
-  const [open, setOpen] = useRecoilState(modalState);
-  const filePickerRef = React.useRef<HTMLInputElement>(null);
-  const titleRef = React.useRef<HTMLInputElement>(null);
-  const [loading, setLoading] = React.useState(false);
-  const [selectedFile, setSelectedFile] = React.useState("");
-
-  //testing recipes form
-  const [postType, setPostType] = useState('basic');
-  const [ingredients, setIngredients] = useState([""]);
-  const [steps, setSteps] = useState([""]);
-
-  async function createPost() {
-
-  }
 
   return (
-
     <CreatePost />
   )
 }
@@ -46,6 +32,7 @@ const CreatePost: React.FC = () => {
   const filePickerRef = React.useRef<HTMLInputElement>(null);
   const [loading, setLoading] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState("");
+  const [imageForUpload, setImageForUpload] = React.useState<File | null>(null);;
 
   //testing recipes form
   const [postType, setPostType] = useState('basic');
@@ -56,15 +43,68 @@ const CreatePost: React.FC = () => {
     const reader = new FileReader();
     if (e.target.files && e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0]);
+      setImageForUpload(e.target.files[0]);
     }
     reader.onload = (readerEvent) => {
       if (readerEvent.target) {
         setSelectedFile(readerEvent.target?.result as string);
+        console.log({ selectedFile });
       }
-      
-
     }
   }
+
+  const uploadImageToBucket = async (file: File | null) => {
+    if (!file) return;
+    try {
+      const { data, error } = await supabase.storage
+        .from('public/images')
+        .upload(session?.user?.id + "/" + uuidv4(), file);
+
+      if (error) {
+        throw error;
+      }
+
+      // Get the public URL of the uploaded image
+      const publicUrl = supabase.storage.from('images').getPublicUrl(file.name);
+      console.log('Image uploaded successfully:', data);
+      return publicUrl;
+
+    } catch (error) {
+      console.error('Error uploading image to bucket:', error);
+      return null;
+    }
+  };
+
+  const handleIngredientChange = (index: number, value: string) => {
+    setIngredients((prevIngredients) => {
+      const newIngredients = [...prevIngredients];
+      newIngredients[index] = value;
+      return newIngredients;
+    });
+  };
+
+  const handleStepChange = (index: number, value: string) => {
+    setSteps((prevSteps) => {
+      const newSteps = [...prevSteps];
+      newSteps[index] = value;
+      return newSteps;
+    });
+  };
+  const handleIngredientDelete = (index: number) => {
+    setIngredients((prevIngredients) => {
+      const newIngredients = [...prevIngredients];
+      newIngredients.splice(index, 1);
+      return newIngredients;
+    });
+  };
+
+  const handleStepDelete = (index: number) => {
+    setSteps((prevSteps) => {
+      const newSteps = [...prevSteps];
+      newSteps.splice(index, 1);
+      return newSteps;
+    });
+  };
 
   //testing recipes form
   const addIngredient = () => {
@@ -74,6 +114,7 @@ const CreatePost: React.FC = () => {
   const addStep = () => {
     setSteps((prevSteps) => [...prevSteps, ""]);
   };
+
 
   const utils = api.useContext();
   const uploadPost = api.post.create.useMutation({
@@ -85,6 +126,30 @@ const CreatePost: React.FC = () => {
       await utils.post.getAll.invalidate();
     },
   });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (imageForUpload) {
+      try {
+        const publicUrl = await uploadImageToBucket(imageForUpload);
+        // Do something with the image URL, like save it to a database
+        console.log("File uploaded successfully:", publicUrl);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
+    uploadPost.mutate({
+      authorId: session?.user?.id as string,
+      title,
+      ingredients,
+      steps,
+    });
+
+    setTitle("");
+    setSelectedFile("");
+    setIngredients([""]);
+    setSteps([""]);
+  };
 
   return status === "authenticated" ? (
 
@@ -133,13 +198,9 @@ const CreatePost: React.FC = () => {
                 </div>
               )}
 
-              <form onSubmit={(e) => {
+              <form onSubmit={async (e) => {
                 e.preventDefault();
-                uploadPost.mutate({
-                  authorId: session.user?.id as string,
-                  title,
-                });
-                setTitle("");
+                handleSubmit(e);
                 setOpen(false);
               }}
               >
@@ -161,6 +222,7 @@ const CreatePost: React.FC = () => {
                     <div>
                       <input ref={filePickerRef} type="file" hidden onChange={addImageToPost} />
                     </div>
+
                     <div className="mt-2">
                       <input className="border-none focus:ring-0 w-full text-center bg-gray-100 rounded-lg" type="text" placeholder="Please enter a title..." minLength={2} maxLength={100} value={title} onChange={(e) => setTitle(e.target.value)} />
                     </div>
@@ -171,18 +233,21 @@ const CreatePost: React.FC = () => {
                         {ingredients.map((ingredient, index) => (
                           <div key={index} className="flex">
                             <input
-                              className="border-none bg-gray-100 rounded-lg mr-2 focus:ring-0 w-full"
+                              className="border-none bg-gray-100 rounded-lg mr-1 focus:ring-0 w-full"
                               type="text"
                               value={ingredient}
                               placeholder={`Ingredient ${index + 1}`}
                               onChange={(event) => {
-                                const newIngredients = [...ingredients];
-                                newIngredients[index] = event.target.value;
-                                setIngredients(newIngredients);
+                                handleIngredientChange(index, event.target.value)
                               }}
                             />
-                            {index === ingredients.length - 1 && (
-                              <div onClick={addIngredient} className="m-auto flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
+                            {index !== 0 && (
+                              <div onClick={() => handleIngredientDelete(index)} className="m-auto mr-1 flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
+                                <BiMinus className="h-6 w-6 text-center text-orange-500" aria-hidden="true" />
+                              </div>
+                            )}
+                            {index === ingredients.length - 1 && ingredient.trim() !== '' && (
+                              <div onClick={addIngredient} className="m-auto mr-1 flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
                                 <BiPlus className="h-6 w-6 text-center text-orange-500" aria-hidden="true" />
                               </div>
                             )}
@@ -197,18 +262,21 @@ const CreatePost: React.FC = () => {
                         {steps.map((step, index) => (
                           <div key={index} className="flex">
                             <input
-                              className="border-none focus:ring-0 bg-gray-100 rounded-lg mr-2 w-full"
+                              className="border-none focus:ring-0 bg-gray-100 rounded-lg mr-1 w-full"
                               type="text"
                               value={step}
                               placeholder={`Step ${index + 1}`}
                               onChange={(event) => {
-                                const newSteps = [...steps];
-                                newSteps[index] = event.target.value;
-                                setSteps(newSteps);
+                                handleStepChange(index, event.target.value);
                               }}
                             />
-                            {index === steps.length - 1 && (
-                              <div onClick={addStep} className="m-auto flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
+                            {index !== 0 && (
+                              <div onClick={() => handleStepDelete(index)} className="m-auto mr-1 flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
+                                <BiMinus className="h-6 w-6 text-center text-orange-500" aria-hidden="true" />
+                              </div>
+                            )}
+                            {index === steps.length - 1 && step.trim() !== '' && (
+                              <div onClick={addStep} className="m-auto mr-1 flex items-center justify-center h-8 w-8 rounded-full bg-orange-100 cursor-pointer">
                                 <BiPlus className="h-6 w-6 text-center text-orange-500" aria-hidden="true" />
                               </div>
                             )}
@@ -233,9 +301,9 @@ const CreatePost: React.FC = () => {
           </Transition.Child>
 
         </div>
-      </Dialog>
+      </Dialog >
 
-    </Transition.Root>
+    </Transition.Root >
   ) : null;
 
 
