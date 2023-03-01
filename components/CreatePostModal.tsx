@@ -146,6 +146,7 @@ const CreatePost: React.FC = () => {
       setSelectedFile("");
       setIngredients([""]);
       setSteps([""]);
+      setOpen(false);
   
       return void undefined; // explicitly return void to satisfy the no-misused-promises rule
     } catch (error) {
@@ -201,17 +202,7 @@ const CreatePost: React.FC = () => {
                 </div>
               )}
 
-              <form onSubmit={async (e) => {
-                e.preventDefault();
-                try {
-                  await handleSubmit(e);
-                  setOpen(false);
-                } catch (error) {
-                  // handle error here
-                }
-                return void 0; // explicitly return void to satisfy the no-misused-promises rule
-              }}
-              >
+              <form onSubmit={handleSubmit}>
 
                 {selectedFile ? (
                   <img src={selectedFile} className="w-full object-contain cursor-pointer" onClick={() => setSelectedFile("")} alt="" />
