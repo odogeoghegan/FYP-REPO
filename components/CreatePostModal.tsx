@@ -127,7 +127,7 @@ const CreatePost: React.FC = () => {
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -136,7 +136,7 @@ const CreatePost: React.FC = () => {
         // Do something with the image URL, like save it to a database
         console.log("File uploaded successfully:", {/*publicUrl*/ });
       }
-      await uploadPost.mutate({
+      uploadPost.mutate({
         authorId: session?.user?.id as string,
         title,
         ingredients,
