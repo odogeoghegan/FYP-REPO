@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useState } from 'react'
 import _app from "../src/pages";
 import { selector, useRecoilState } from "recoil";
-import { modalState } from '../atoms/modalAtom';
+import { createPostModalAtom } from '../atoms/createPostModalAtom';
 import { Dialog, Transition } from '@headlessui/react';
 import { useSession } from "next-auth/react";
 import { v4 as uuidv4 } from "uuid";
@@ -28,7 +28,7 @@ const CreatePost: React.FC = () => {
   const [title, setTitle] = React.useState("");
   const { data: session, status } = useSession();
 
-  const [open, setOpen] = useRecoilState(modalState);
+  const [open, setOpen] = useRecoilState(createPostModalAtom);
   const filePickerRef = React.useRef<HTMLInputElement>(null);
   const [loading, setLoading] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState("");

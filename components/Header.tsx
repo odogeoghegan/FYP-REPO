@@ -2,17 +2,17 @@ import Image from "next/image";
 import React from 'react';
 import _app from "../src/pages";
 import { useRecoilState } from "recoil";
-import { modalState } from "../atoms/modalAtom";
+import { createPostModalAtom } from "../atoms/createPostModalAtom";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import {
-  BiCookie, BiSearch, BiUser, BiSend, BiShare, BiPaperPlane, BiMessage, BiMenu, BiGroup,BiHome,BiPlusCircle
+  BiCookie, BiHeart, BiSearch, BiUser, BiSend, BiShare, BiPaperPlane, BiMessage, BiMenu, BiGroup,BiHome,BiPlusCircle
 } from "react-icons/bi";
 
 
 
 function Header() {
-  const [open, setOpen] = useRecoilState(modalState);
+  const [openCreatePost, setOpenCreatePost] = useRecoilState(createPostModalAtom);
   const { data: session, status } = useSession();
 
 
@@ -60,9 +60,9 @@ function Header() {
           {session ? (
           <>
           <BiPaperPlane className="navBtn" size="30"/>
-          <BiPlusCircle onClick={() => setOpen(true)} className="navBtn" size="30"/>
+          <BiPlusCircle onClick={() => setOpenCreatePost(true)} className="navBtn" size="30"/>
           <BiGroup className="navBtn" size="30"/>
-          <BiCookie className="navBtn" size="30"/>
+          <BiHeart className="navBtn" size="30"/>
           <img onClick={() => void signOut()} src={session?.user?.image ?? "" } alt="profile picture" className="h-10 w-10 rounded-full cursor-pointer outline outline-2 outline-black" />
           </>
           ) : (
