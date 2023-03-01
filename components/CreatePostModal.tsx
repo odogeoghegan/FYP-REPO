@@ -203,10 +203,13 @@ const CreatePost: React.FC = () => {
 
               <form onSubmit={async (e) => {
                 e.preventDefault();
-                await handleSubmit(e).catch((error) => {
+                try {
+                  await handleSubmit(e);
+                  setOpen(false);
+                } catch (error) {
                   // handle error here
-                });
-                setOpen(false);
+                }
+                return void 0; // explicitly return void to satisfy the no-misused-promises rule
               }}
               >
 
