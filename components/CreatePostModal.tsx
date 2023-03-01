@@ -127,33 +127,35 @@ const CreatePost: React.FC = () => {
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
-      e.preventDefault();
       if (imageForUpload) {
-        const publicUrl = await uploadImageToBucket(imageForUpload);
+        // const publicUrl = await uploadImageToBucket(imageForUpload);
         // Do something with the image URL, like save it to a database
-        console.log("File uploaded successfully:", publicUrl);
+        console.log("File uploaded successfully:", {/*publicUrl*/ });
       }
-      await uploadPost.mutateAsync({
+      await uploadPost.mutate({
         authorId: session?.user?.id as string,
         title,
         ingredients,
         steps,
       });
-  
+
       setTitle("");
       setSelectedFile("");
       setIngredients([""]);
       setSteps([""]);
+      setPostType('basic');
       setOpen(false);
-  
-      return void undefined; // explicitly return void to satisfy the no-misused-promises rule
+
     } catch (error) {
       console.error("Error submitting form:", error);
-      throw error; // re-throw the error so it can be caught by the caller
+      // handle error here
     }
   };
+
 
   return status === "authenticated" ? (
 
