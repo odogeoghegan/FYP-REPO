@@ -34,7 +34,7 @@ const Post: React.FC = () => {
                         </div>
 
                         {/* image */}
-                        <img src='http://localhost:54321/storage/v1/object/public/images/WhatsApp%20Image%202023-02-22%20at%2000.46.40.jpeg'
+                        <img src='https://hiwlxpoxqpobizjstptb.supabase.co/storage/v1/object/public/images/WhatsApp%20Image%202023-02-22%20at%2000.46.40.jpeg'
                         className='object-cover w-full h-[32rem] cursor-pointer' alt='postImage'/>
 
                         {/* Buttons */}
