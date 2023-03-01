@@ -127,44 +127,32 @@ const CreatePost: React.FC = () => {
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    return new Promise<void>(async (resolve, reject) => {
-      try {
-        e.preventDefault();
-        if (imageForUpload) {
-          const publicUrl = await uploadImageToBucket(imageForUpload);
-          // Do something with the image URL, like save it to a database
-          console.log("File uploaded successfully:", publicUrl);
-        }
-        await uploadPost.mutateAsync({
-          authorId: session?.user?.id as string,
-          title,
-          ingredients,
-          steps,
-        });
-
-        setTitle("");
-        setSelectedFile("");
-        setIngredients([""]);
-        setSteps([""]);
-
-        resolve();
-      } catch (error) {
-        console.error("Error submitting form:", error);
-        reject(error);
-      }
-    });
-  }
-
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     try {
-      await handleSubmit(e);
-      setOpen(false);
+      e.preventDefault();
+      if (imageForUpload) {
+        const publicUrl = await uploadImageToBucket(imageForUpload);
+        // Do something with the image URL, like save it to a database
+        console.log("File uploaded successfully:", publicUrl);
+      }
+      await uploadPost.mutateAsync({
+        authorId: session?.user?.id as string,
+        title,
+        ingredients,
+        steps,
+      });
+  
+      setTitle("");
+      setSelectedFile("");
+      setIngredients([""]);
+      setSteps([""]);
+  
+      return void undefined; // explicitly return void to satisfy the no-misused-promises rule
     } catch (error) {
-      // handle error here
+      console.error("Error submitting form:", error);
+      throw error; // re-throw the error so it can be caught by the caller
     }
-  }
+  };
 
   return status === "authenticated" ? (
 
@@ -213,7 +201,14 @@ const CreatePost: React.FC = () => {
                 </div>
               )}
 
-              <form onSubmit={handleFormSubmit}>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                await handleSubmit(e).catch((error) => {
+                  // handle error here
+                });
+                setOpen(false);
+              }}
+              >
 
                 {selectedFile ? (
                   <img src={selectedFile} className="w-full object-contain cursor-pointer" onClick={() => setSelectedFile("")} alt="" />
