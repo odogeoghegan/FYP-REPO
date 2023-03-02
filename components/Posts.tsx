@@ -2,7 +2,7 @@ import React from 'react'
 import { api } from '../src/utils/api';
 
 import {
-    BiDotsHorizontalRounded, BiHeart, BiCommentDots, BiPaperPlane, BiBookmark
+    BiDotsHorizontalRounded, BiHeart, BiCommentDots, BiPaperPlane, BiBookmark, BiHappy
 } from "react-icons/bi";
 
 function Posts() {
@@ -52,10 +52,20 @@ const Post: React.FC = () => {
                             <span className='font-bold mr-1 cursor-pointer'>{entry.author.name} </span>
                             {entry.title}
                         </p>
-
                         <div className='pb-1 flex items-center justify-center'>
                         <p>{entry.createdAt.toUTCString()}</p>
                         </div>
+
+                        {/* Comments */}
+
+                        {/* Comment Input */}
+                        <form className="flex items-center p-3">
+                            <BiHappy className='h-6 w-6 cursor-pointer'/>
+                            <input type={'text'} placeholder='Add a comment...'
+                            className='flex-1 border-none bg-gray-100 rounded-lg mx-1 focus:ring-0 outline-none'/>
+                            <button className='bg-orange-500 hover:bg-orange-600 text-black font-semibold py-2 px-4 rounded'>Post</button>
+                        </form>
+                        
                     </div>
                 </div>
             ))}
