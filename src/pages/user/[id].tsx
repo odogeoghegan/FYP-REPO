@@ -17,9 +17,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { id: user.id.toString() },
   }));
 
-  // Return the paths and set fallback to false so that 404 is returned for invalid paths
-  return { paths, fallback: false };
-};
+  // Return the paths and set fallback to blocking so that Next.js generates the page on the server if it hasn't been pre-generated
+  return { paths, fallback: "blocking" };
+}
 
 // This function fetches the data for a single user at build time
 export const getStaticProps: GetStaticProps = async ({ params }) => {
@@ -35,7 +35,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   // Convert the post.createdAt date object to a formatted string
   const serializedUser: User = JSON.parse(JSON.stringify(user, (_, value: User) => {
     if (value instanceof Date) {
-        return value.toISOString();
+      return value.toISOString();
     }
     return value;
   }));
@@ -61,7 +61,7 @@ function UserPage({ user }: { user: User & { posts: Post[] } }) {
   // Render the user content
   return (
     <>
-    <UserPageLayout user={user} />
+      <UserPageLayout user={user} />
     </>
   );
 }

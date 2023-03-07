@@ -17,8 +17,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { id: post.id.toString() },
   }));
 
-  // Return the paths and set fallback to false so that 404 is returned for invalid paths
-  return { paths, fallback: false };
+  // Return the paths and set fallback to blocking so that Next.js generates the page on the server if it hasn't been pre-generated
+  return { paths, fallback: "blocking" };
 }
 
 // This function fetches the data for a single post at build time
@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   /* eslint-disable */
   // Convert the post.createdAt date object to a string
-  const serializedPost: Post = JSON.parse(JSON.stringify(post, (_, value: Post)=> {
+  const serializedPost: Post = JSON.parse(JSON.stringify(post, (_, value: Post) => {
     if (value instanceof Date) {
       return value.toISOString();
     }
