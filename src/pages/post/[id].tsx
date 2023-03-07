@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
 
   // Convert the post.createdAt date object to a string
-  const serializedPost = JSON.parse(JSON.stringify(post, (_, value) => {
+  const serializedPost: Post & { author: User, recipe: Recipe } = JSON.parse(JSON.stringify(post, (_, value) => {
     if (value instanceof Date) {
       return value.toISOString();
     }
