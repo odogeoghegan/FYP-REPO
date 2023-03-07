@@ -45,6 +45,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       post: serializedPost,
     },
+    revalidate: 1,
   };
 }
 /* eslint-enable */

@@ -8,7 +8,6 @@ import { createClient } from '@supabase/supabase-js';
 import { api } from "../utils/api";
 import Header from "../../components/Header";
 import TRPCTestAndSignIn from "../../components/TRPCTestAndSignIn";
-import CreatePostModal from "../../components/CreatePostModal";
 import Feed from "../../components/Feed";
 
 
@@ -27,8 +26,6 @@ const Home: NextPage = () => {
       {/* <TRPCTestAndSignIn /> */}
 
       <Feed />
-
-      <CreatePostModal />
     </>
   );
 };

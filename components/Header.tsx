@@ -4,7 +4,7 @@ import _app from "../src/pages";
 import { useRecoilState } from "recoil";
 import { createPostModalAtom } from "../atoms/createPostModalAtom";
 import { signIn, signOut, useSession } from "next-auth/react";
-
+import CreatePostModal from "../components/CreatePostModal";
 import {
   BiCookie, BiHeart, BiSearch, BiUser, BiSend, BiShare, BiPaperPlane, BiMessage, BiMenu, BiGroup,BiHome,BiPlusCircle
 } from "react-icons/bi";
@@ -17,6 +17,7 @@ function Header() {
 
 
   return (
+    <>
     <div className="shadow-sm border-b bg-white sticky top-0 z-50">
       <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
 
@@ -71,7 +72,8 @@ function Header() {
           </div>
       </div>
     </div>
-
+    <CreatePostModal />
+    </>
   );
 }
 

@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { PrismaClient, Post, User } from '@prisma/client';
 import UserPageLayout from '../../../components/UserPageLayout';
 
-
 // Create a new Prisma client instance
 const prisma = new PrismaClient();
 
@@ -28,7 +27,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   // Fetch the user with the matching ID and include the posts relationship
   const user = await prisma.user.findUnique({
     where: { id: id as string },
-    include: { posts: { include: { author: true } } },
+    include: { 
+      posts: {
+        include: { author: true },
+        orderBy: { createdAt: 'desc' }, 
+      } 
+    },
   });
 
   /* eslint-disable */
@@ -45,6 +49,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       user: serializedUser,
     },
+    revalidate: 1, // regenerate the page with new data if a request hasn't been made for the page in 1 second
   };
 };
 /* eslint-enable */
