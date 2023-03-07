@@ -10,7 +10,7 @@ import {
 } from "react-icons/bi";
 import { api } from "../src/utils/api";
 import { supabase } from '../src/server/supabase';
-import { PrismaClient } from '@prisma/client';
+
 
 
 

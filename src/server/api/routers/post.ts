@@ -11,7 +11,7 @@ export const postRouter = createTRPCRouter({
                 },
                 include: {
                     author: true, // Return all related author fields
-                  },
+                },
             });
         }
         catch (error) {
@@ -22,41 +22,62 @@ export const postRouter = createTRPCRouter({
 
 
     create: protectedProcedure
-    .input(
-        z.object({
-            title: z.string(),
-            authorId: z.string(),
-            description: z.string().optional(),
-            images: z.array(z.string()).optional(),
-            ingredients: z.array(z.string()).optional(),
-            steps: z.array(z.string()).optional(),
-        })
-    )
-    .mutation(async ({ ctx, input }) => {
-        try {
-            const post = await ctx.prisma.post.create({
-                data: {
-                    title:  input.title,
-                    authorId: input.authorId,
-                    description: input.description,
-                    images: input.images,
-                    recipe: {
-                        create: {
-                            ingredients: input.ingredients || [],
-                            steps: input.steps || [],
+        .input(
+            z.object({
+                title: z.string(),
+                authorId: z.string(),
+                description: z.string().optional(),
+                images: z.array(z.string()).optional(),
+                ingredients: z.array(z.string()).optional(),
+                steps: z.array(z.string()).optional(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            try {
+                const post = await ctx.prisma.post.create({
+                    data: {
+                        title: input.title,
+                        authorId: input.authorId,
+                        description: input.description,
+                        images: input.images,
+                        recipe: {
+                            create: {
+                                ingredients: input.ingredients || [],
+                                steps: input.steps || [],
+                            },
                         },
                     },
-                },
-                include: {
-                    recipe: true,
-                },
-            });
+                    include: {
+                        recipe: true,
+                    },
+                });
 
-            return post;
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }),
+                return post;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }),
+
+    getPostById: publicProcedure
+        .input(
+            z.object({
+                id: z.string()
+            }))
+        .query(async ({ ctx, input }) => {
+            try {
+                const post = await ctx.prisma.post.findUnique({
+                    where: {
+                        id: input.id,
+                    },
+                    include: {
+                        author: true,
+                    },
+                });
+                return post;
+            } catch (error) {
+                console.log("error", error);
+            }
+        }),
 
 })

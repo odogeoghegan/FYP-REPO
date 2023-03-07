@@ -44,7 +44,7 @@ model User {
   accounts      Account[]
   followings    Follower[]    @relation("UserFollowing")
   followers     Follower[]    @relation("UserFollower")
-  posts         Post[]
+  posts         Post[]        @relation("user_posts")
   comments      PostComment[]
   likes         PostLike[]
   sessions      Session[]
@@ -57,7 +57,7 @@ model Post {
   images      String[]
   authorId    String
   createdAt   DateTime      @default(now())
-  author      User          @relation(fields: [authorId], references: [id])
+  author      User          @relation("user_posts", fields: [authorId], references: [id])
   comments    PostComment[]
   likes       PostLike[]
   recipe      Recipe?
