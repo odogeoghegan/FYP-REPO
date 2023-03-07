@@ -31,8 +31,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     include: { posts: { include: { author: true } } },
   });
 
+  /* eslint-disable */
   // Convert the post.createdAt date object to a formatted string
-  const serializedUser: User = JSON.parse(JSON.stringify(user ?? "", (key, value: User) => {
+  const serializedUser: User = JSON.parse(JSON.stringify(user, (_, value: User) => {
     if (value instanceof Date) {
         return value.toISOString();
     }
@@ -46,6 +47,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   };
 };
+/* eslint-enable */
 
 function UserPage({ user }: { user: User & { posts: Post[] } }) {
   // Get the router instance
