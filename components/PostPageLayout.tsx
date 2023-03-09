@@ -22,7 +22,7 @@ function PostPageLayout({ post }: PostPageLayoutProps) {
           <h2 className="text-xl font-semibold mb-2">Author</h2>
           <div>{post.author.name}</div>
         </div>
-        {post.recipe && post.recipe.ingredients.length > 0 && post.recipe.steps.length > 0 && (
+        {post.recipe && post.recipe.ingredients.every(ingredient => ingredient.length >= 2) && post.recipe.steps.every(step => step.length >= 2) && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-2">Recipe</h2>
             <div className="bg-white rounded-lg shadow-md p-4">

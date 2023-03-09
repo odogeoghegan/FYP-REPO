@@ -7,7 +7,6 @@ import { createClient } from '@supabase/supabase-js';
 
 import { api } from "../utils/api";
 import Header from "../../components/Header";
-import TRPCTestAndSignIn from "../../components/TRPCTestAndSignIn";
 import Feed from "../../components/Feed";
 
 
@@ -22,9 +21,6 @@ const Home: NextPage = () => {
       {/* Header */}
       <Header />
       {/* Feed */}
-
-      {/* <TRPCTestAndSignIn /> */}
-
       <Feed />
     </>
   );
