@@ -49,7 +49,7 @@ const CreatePost: React.FC = () => {
     }
   }
 
-  /* eslint-disable */
+
   const uploadImageToBucket = async (file: File | null) => {
     if (!file) return;
     try {
@@ -77,7 +77,6 @@ const CreatePost: React.FC = () => {
       return null;
     }
   };
-  /* eslint-enable */
 
   const handleIngredientChange = (index: number, value: string) => {
     setIngredients((prevIngredients) => {
@@ -133,7 +132,7 @@ const CreatePost: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    /* eslint-disable */
     try {
       if (imageForUpload) {
         const publicUrl = await uploadImageToBucket(imageForUpload);
@@ -160,6 +159,7 @@ const CreatePost: React.FC = () => {
       console.error("Error submitting form:", error);
       // handle error here
     }
+    /* eslint-enable */
   };
 
 
