@@ -11,13 +11,6 @@ import {
 import { api } from "../src/utils/api";
 import { supabase } from '../src/server/supabase';
 
-import { createClient } from '@supabase/supabase-js'
-import { array } from 'zod';
-
-
-
-
-
 function CreatePostModal() {
 
   return (
@@ -56,6 +49,7 @@ const CreatePost: React.FC = () => {
     }
   }
 
+  /* eslint-disable */
   const uploadImageToBucket = async (file: File | null) => {
     if (!file) return;
     try {
@@ -83,6 +77,7 @@ const CreatePost: React.FC = () => {
       return null;
     }
   };
+  /* eslint-enable */
 
   const handleIngredientChange = (index: number, value: string) => {
     setIngredients((prevIngredients) => {
