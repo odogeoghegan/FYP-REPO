@@ -39,7 +39,7 @@ const Post: React.FC = () => {
                         {/* image */}
                         <Link href={`/post/${entry.id}`}>
                             <img
-                                src={`${entry.images[0]}`}
+                                src={entry.images[0]}
                                 className="object-cover w-full h-[32rem] cursor-pointer"
                                 alt="postImage"
                             />
