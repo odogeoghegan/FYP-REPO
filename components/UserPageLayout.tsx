@@ -11,7 +11,7 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
   return (
     <>
       <Header />
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="bg-white overflow-hidden shadow-xl sm:rounded-lg">
           <div className="p-6">
             <div className="flex items-center">

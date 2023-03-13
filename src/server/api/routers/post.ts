@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { getSession } from "next-auth/react";
 
 export const postRouter = createTRPCRouter({
 
@@ -79,5 +80,56 @@ export const postRouter = createTRPCRouter({
                 console.log("error", error);
             }
         }),
+
+    likePost: protectedProcedure
+        .input(z.object({ postId: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+            const session = await getSession();
+            const userId = session?.user?.id;
+            if (!userId) {
+                throw new Error("Not authenticated");
+            }
+
+            const like = await ctx.prisma.postLike.findFirst({
+                where: { postId: input.postId, userId },
+            });
+
+            if (like) {
+                await ctx.prisma.postLike.delete({ where: { id: like.id } });
+                return { success: true, message: "Post unliked" };
+            } else {
+                await ctx.prisma.postLike.create({
+                    data: {
+                        postId: input.postId,
+                        userId,
+                    },
+                });
+                return { success: true, message: "Post liked" };
+            }
+        }),
+
+    unlikePost: protectedProcedure
+        .input(z.object({ postId: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+            const session = await getSession();
+            const userId = session?.user?.id;
+            if (!userId) {
+                throw new Error("Not authenticated");
+            }
+
+            const like = await ctx.prisma.postLike.findFirst({
+                where: { postId: input.postId, userId },
+            });
+
+            if (!like) {
+                throw new Error("Post not liked");
+            }
+
+            await ctx.prisma.postLike.delete({ where: { id: like.id } });
+            return { success: true, message: "Post unliked" };
+        }),
+
+
+
 
 })

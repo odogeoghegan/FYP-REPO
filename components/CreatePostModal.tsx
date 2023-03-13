@@ -11,6 +11,9 @@ import {
 import { api } from "../src/utils/api";
 import { supabase } from '../src/server/supabase';
 
+import { createClient } from '@supabase/supabase-js'
+import { array } from 'zod';
+
 
 
 
@@ -33,7 +36,7 @@ const CreatePost: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState("");
   const [imageForUpload, setImageForUpload] = React.useState<File | null>(null);
-
+  const [images, setImages] = useState([""]);
   //testing recipes form
   const [postType, setPostType] = useState('basic');
   const [ingredients, setIngredients] = useState([""]);
@@ -57,7 +60,7 @@ const CreatePost: React.FC = () => {
     if (!file) return;
     try {
       const { data, error } = await supabase.storage
-        .from('public/images')
+        .from('images')
         .upload(session?.user?.id as string + "/" + uuidv4(), file);
 
       if (error) {
@@ -65,9 +68,15 @@ const CreatePost: React.FC = () => {
       }
 
       // Get the public URL of the uploaded image
-      const publicUrl = supabase.storage.from('images').getPublicUrl(file.name);
-      console.log('Image uploaded successfully:', data);
+      const publicUrl = supabase.storage.from('images').getPublicUrl(data.path, {
+        // transform: {
+        //   width: 300,
+        //   height: 500,
+        // }
+      });
+      console.log('Image uploaded successfully:', publicUrl?.data.publicUrl);
       return publicUrl;
+
 
     } catch (error) {
       console.error('Error uploading image to bucket:', error);
@@ -127,28 +136,30 @@ const CreatePost: React.FC = () => {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       if (imageForUpload) {
-        // const publicUrl = await uploadImageToBucket(imageForUpload);
+        const publicUrl = await uploadImageToBucket(imageForUpload);
         // Do something with the image URL, like save it to a database
-        console.log("File uploaded successfully:", {/*publicUrl*/ });
+        uploadPost.mutate({
+          authorId: session?.user?.id as string,
+          title,
+          images: ["" + publicUrl?.data.publicUrl],
+          ingredients,
+          steps,
+        });
       }
-      uploadPost.mutate({
-        authorId: session?.user?.id as string,
-        title,
-        ingredients,
-        steps,
-      });
 
       setTitle("");
       setSelectedFile("");
+      setImages([""]);
       setIngredients([""]);
       setSteps([""]);
       setPostType('basic');
       setOpen(false);
+      setImageForUpload(null);
 
     } catch (error) {
       console.error("Error submitting form:", error);

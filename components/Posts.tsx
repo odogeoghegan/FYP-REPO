@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { api } from '../src/utils/api';
 import Link from 'next/link';
 
@@ -39,7 +39,7 @@ const Post: React.FC = () => {
                         {/* image */}
                         <Link href={`/post/${entry.id}`}>
                             <img
-                                src="https://hiwlxpoxqpobizjstptb.supabase.co/storage/v1/object/public/images/WhatsApp%20Image%202023-02-22%20at%2000.46.40.jpeg"
+                                src={`${entry.images[0]}`}
                                 className="object-cover w-full h-[32rem] cursor-pointer"
                                 alt="postImage"
                             />
