@@ -1,6 +1,8 @@
 import { createTRPCRouter } from "./trpc";
 import { postRouter } from "./routers/post";
+import { followsRouter } from "./routers/follows";
 import { exampleRouter } from "./routers/example";
+
 
 /**
  * This is the primary router for your server.
@@ -9,6 +11,7 @@ import { exampleRouter } from "./routers/example";
  */
 export const appRouter = createTRPCRouter({
   post: postRouter,
+  follows :followsRouter,
   example : exampleRouter,
 });
 

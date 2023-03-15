@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useState } from 'react'
 import _app from "../src/pages";
-import { selector, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { createPostModalAtom } from '../atoms/createPostModalAtom';
 import { Dialog, Transition } from '@headlessui/react';
 import { useSession } from "next-auth/react";
@@ -117,7 +117,6 @@ const CreatePost: React.FC = () => {
   const addStep = () => {
     setSteps((prevSteps) => [...prevSteps, ""]);
   };
-
 
   const utils = api.useContext();
   const uploadPost = api.post.create.useMutation({

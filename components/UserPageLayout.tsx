@@ -1,13 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Post, User, Recipe } from "@prisma/client";
 import Header from '../components/Header';
 import Link from 'next/link';
+import { api } from '../src/utils/api';
+import { useSession } from 'next-auth/react';
 
 interface UserPageLayoutProps {
   user: User & { posts: Post[] };
 }
 
+
 function UserPageLayout({ user }: UserPageLayoutProps) {
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const { data: session } = useSession();
+
+  const handleFollow = async () => {
+    try {
+      // await api.follows.followUser.useMutation({ userId: user?.id });
+      setIsFollowing(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      // await api.follows.unfollowUser.useMutation({ userId: user?.id );
+      setIsFollowing(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   return (
     <>
       <Header />
@@ -17,7 +42,7 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <img
-                  className="h-20 w-20 rounded-full"
+                  className="h-20 w-20 rounded-full object-contain border p-1"
                   src={user.image ?? ""}
                   alt=""
                 />
@@ -28,24 +53,42 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
                 </h1>
                 <p className="text-gray-500">{user.email}</p>
               </div>
+              <div className="ml-10">
+                {!isFollowing && (
+                  <button
+                    className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded mt-4"
+                    onClick={handleFollow}
+                  >
+                    Follow
+                  </button>
+                )}
+                {isFollowing && (
+                  <button
+                    className=" bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded mt-4"
+                    onClick={handleUnfollow}
+                  >
+                    Unfollow
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 md:max-w-3xl xl:grid-cols-3 xl:max-w-6xl mx-auto">
-          <div className="col-span-2 grid grid-cols-3 gap-6 p-6">
-            {user.posts.map((post) => (
-              <div key={post.id} className="bg-gray-100 p-4">
-                <Link href={`/post/${post.id}`}>
-                <img
-                  className="w-full h-40 object-cover"
-                  src={post.images[0] ?? "https://hiwlxpoxqpobizjstptb.supabase.co/storage/v1/object/public/images/WhatsApp%20Image%202023-02-22%20at%2000.46.40.jpeg"}
-                  alt=""
-                />
-                </Link>
-                <h2 className="mt-2 text-lg font-bold">{post.title}</h2>
-                <p className="mt-2 text-gray-500">{post.description}</p>
-              </div>
-            ))}
-          </div>
+            <div className="col-span-2 grid grid-cols-3 gap-6 p-6">
+              {user.posts.map((post) => (
+                <div key={post.id} className="bg-gray-100 p-4">
+                  <Link href={`/post/${post.id}`}>
+                    <img
+                      className="w-full h-40 object-cover"
+                      src={post.images[0] ?? "https://hiwlxpoxqpobizjstptb.supabase.co/storage/v1/object/public/images/WhatsApp%20Image%202023-02-22%20at%2000.46.40.jpeg"}
+                      alt=""
+                    />
+                  </Link>
+                  <h2 className="mt-2 text-lg font-bold">{post.title}</h2>
+                  <p className="mt-2 text-gray-500">{post.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
