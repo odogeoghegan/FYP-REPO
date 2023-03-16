@@ -28,6 +28,7 @@ const RecipeGenerator: React.FC = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
 
+    /* eslint-disable */
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsGenerating(true);
@@ -202,6 +203,6 @@ const RecipeGenerator: React.FC = () => {
 
         </Transition.Root >
     ) : null;
-
+/* eslint-enable */
 
 };

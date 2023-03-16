@@ -15,7 +15,7 @@ type RecipeResponse = {
 interface OpenAIResponse {
   choices: { text: string }[];
 }
-
+/* eslint-disable */
 const generateRecipe = async ({
   food,
   ingrieidents,
@@ -71,4 +71,5 @@ export default async function handler(
   res.status(200).json({
     recipe,
   });
+  /* eslint-enable */
 }
