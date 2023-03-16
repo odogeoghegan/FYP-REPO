@@ -3,10 +3,12 @@ import React from 'react';
 import _app from "../src/pages";
 import { useRecoilState } from "recoil";
 import { createPostModalAtom } from "../atoms/createPostModalAtom";
+import { recipeGeneratorModalAtom } from '../atoms/recipeGeneratorModalAtom';
 import { signIn, signOut, useSession } from "next-auth/react";
 import CreatePostModal from "../components/CreatePostModal";
+import RecipeGeneratorModal from "../components/RecipeGeneratorModal";
 import {
-  BiCookie, BiHeart, BiSearch, BiUser, BiSend, BiShare, BiPaperPlane, BiMessage, BiMenu, BiGroup, BiHome, BiPlusCircle
+  BiCookie, BiHeart, BiSearch, BiUser, BiSend, BiShare, BiPaperPlane, BiMessage, BiMenu, BiGroup, BiHome, BiPlusCircle, BiBookHeart
 } from "react-icons/bi";
 import Link from "next/link";
 
@@ -14,6 +16,7 @@ import Link from "next/link";
 
 function Header() {
   const [openCreatePost, setOpenCreatePost] = useRecoilState(createPostModalAtom);
+  const [openRecipeGenerator, setOpenRecipeGenerator] = useRecoilState(recipeGeneratorModalAtom);
   const { data: session, status } = useSession();
 
 
@@ -67,11 +70,11 @@ function Header() {
             </Link>
             {session ? (
               <>
-                <BiPaperPlane className="navBtn" size="30" />
+                <BiBookHeart onClick={() => setOpenRecipeGenerator(true)} className="navBtn" size="30" />
                 <BiPlusCircle onClick={() => setOpenCreatePost(true)} className="navBtn" size="30" />
                 <BiGroup className="navBtn" size="30" />
                 <BiHeart className="navBtn" size="30" />
-                <img onClick={() => void signOut()} src={session?.user?.image ?? ""} alt="profile picture" className="h-12 w-12 rounded-full object-contain border p-1 cursor-pointer                      " />
+                <img onClick={() => void signOut()} src={session?.user?.image ?? ""} alt="profile picture" className="h-12 w-12 rounded-full object-contain border p-1 cursor-pointer" />
               </>
             ) : (
               <button onClick={() => void signIn()}>Sign In</button>
@@ -80,6 +83,7 @@ function Header() {
         </div>
       </div>
       <CreatePostModal />
+      <RecipeGeneratorModal />
     </>
   );
 }

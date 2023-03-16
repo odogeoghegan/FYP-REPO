@@ -16,6 +16,6 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", "src/pages/auth/signin.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", "src/pages/auth/signin.tsx", "src/pages/api/returnRecipe.ts", "components/RecipeGeneratorModal.tsx"],
   "exclude": ["node_modules"]
 }
