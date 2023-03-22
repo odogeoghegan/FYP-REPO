@@ -108,7 +108,7 @@ const RecipeGenerator: React.FC = () => {
                                         </div>
                                         <div className="flex flex-col">
                                             <label htmlFor="keywords" className="sr-only">
-                                                List ingrieidents you'd like to use (Optional)
+                                                List ingreidents you'd like to use (Optional)
                                             </label>
                                             <textarea
                                                 rows={7}
@@ -116,7 +116,7 @@ const RecipeGenerator: React.FC = () => {
                                                 onChange={(e) => setIngrieidents(e.target.value)}
                                                 name="keyWords"
                                                 id="keyWords"
-                                                placeholder="List ingrieidents you'd like to use (Optional)"
+                                                placeholder="List ingreidents you'd like to use (Optional)"
                                                 className="block w-full rounded-md bg-white border border-gray-400 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm px-4 py-2 placeholder-gray-500 my-2 text-gray-900"
                                             />
                                         </div>

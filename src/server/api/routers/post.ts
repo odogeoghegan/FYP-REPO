@@ -47,8 +47,8 @@ export const postRouter = createTRPCRouter({
                         images: input.images,
                         recipe: {
                             create: {
-                                ingredients: input.ingredients || [],
-                                steps: input.steps || [],
+                                ingredients: input.ingredients,
+                                steps: input.steps,
                             },
                         },
                     },

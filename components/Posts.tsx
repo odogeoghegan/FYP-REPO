@@ -122,7 +122,13 @@ const Post: React.FC = () => {
                             <BiDotsHorizontalRounded className='h-5 w-5' />
                         </div>
 
-
+                        {entry.recipe && entry.recipe.ingredients.every(ingredient => ingredient.length >= 2) && entry.recipe.steps.every(step => step.length >= 2) && (
+                            <Link href={`/post/${entry.id}`}>
+                            <div className='flex items-center font-bold justify-center p-3 bg-orange-500'>
+                                <p>Click to view Recipe</p>
+                            </div>
+                            </Link>
+                        )}
                         {/* image */}
                         <Link href={`/post/${entry.id}`}>
                             <img
@@ -143,7 +149,7 @@ const Post: React.FC = () => {
                                     <BiHeart className='btn' size="25" onClick={() => handleLike(entry.id)} />
                                     /* eslint-enable */
                                 )}
-                                
+
 
                                 <BiCommentDots className='btn' size="25" />
                                 <BiPaperPlane className='btn' size="25" />
@@ -172,7 +178,7 @@ const Post: React.FC = () => {
                                         />
                                         <div>
                                             <Link className="font-bold cursor-pointer" href={`/user/${comment.authorId}`}>
-                                                {comment.authorId} 
+                                                {comment.authorId}
                                             </Link>
                                             <p>{comment.comment}</p>
                                         </div>
@@ -182,7 +188,7 @@ const Post: React.FC = () => {
                         )}
 
                         {/* Comment Input */}
-                        
+
                         <form /* eslint-disable */ className="flex items-center p-3" onSubmit={(e) => handleComment(entry.id, e)} /* eslint-enable */>
                             <BiHappy className='h-6 w-6 cursor-pointer' />
                             <input type="text" value={comment}
