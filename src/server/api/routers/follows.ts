@@ -42,7 +42,7 @@ export const followsRouter = createTRPCRouter({
       }
       catch (error) {
         console.log(error);
-      };
+      }
     }),
 
   getFollowers: publicProcedure

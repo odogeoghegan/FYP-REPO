@@ -58,7 +58,7 @@ const Post: React.FC = () => {
 
 
 
-    const handleComment = async (postId: string, e: React.FormEvent<HTMLFormElement>) => {
+    const handleComment = (postId: string, e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         /* eslint-disable */
         try {
@@ -76,7 +76,7 @@ const Post: React.FC = () => {
         /* eslint-enable */
     };
 
-    const handleLike = async (postId: string) => {
+    const handleLike = (postId: string) => {
         try {
             like.mutate({
                 postId,
@@ -88,7 +88,7 @@ const Post: React.FC = () => {
         }
     };
 
-    const handleUnlike = async (postId: string) => {
+    const handleUnlike = (postId: string) => {
         try {
             unlike.mutate({
                 postId: postId,
@@ -137,10 +137,13 @@ const Post: React.FC = () => {
                             <div className="flex space-x-4">
 
                                 {liked ? (
+                                    /* eslint-disable */
                                     <FaHeart className='btn text-orange-500' size="25" onClick={() => handleUnlike(entry.id)} />
                                 ) : (
                                     <BiHeart className='btn' size="25" onClick={() => handleLike(entry.id)} />
+                                    /* eslint-enable */
                                 )}
+                                
 
                                 <BiCommentDots className='btn' size="25" />
                                 <BiPaperPlane className='btn' size="25" />
@@ -179,7 +182,8 @@ const Post: React.FC = () => {
                         )}
 
                         {/* Comment Input */}
-                        <form className="flex items-center p-3" onSubmit={(e) => handleComment(entry.id, e)}>
+                        
+                        <form /* eslint-disable */ className="flex items-center p-3" onSubmit={(e) => handleComment(entry.id, e)} /* eslint-enable */>
                             <BiHappy className='h-6 w-6 cursor-pointer' />
                             <input type="text" value={comment}
                                 onChange={e => setComment(e.target.value)}
@@ -187,7 +191,7 @@ const Post: React.FC = () => {
                                 className='flex-1 border-none bg-gray-100 rounded-lg mx-1 focus:ring-0 outline-none'
                             />
                             <button type='submit' disabled={!comment.trim()} className='bg-orange-500 hover:bg-orange-600 text-black font-semibold py-2 px-4 rounded'>Post</button>
-                        </form>
+                        </form >
 
                     </div>
                 </div>
