@@ -100,7 +100,7 @@ const RecipeGenerator: React.FC = () => {
                                                 type="text"
                                                 className="block w-full rounded-md bg-white border border-gray-400 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm px-4 py-2 placeholder-gray-500 my-2 text-gray-900"
                                                 name="food"
-                                                placeholder="What do you want to eat?"
+                                                placeholder="What do you want to eat? (Optional)"
                                                 id="food"
                                                 value={food}
                                                 onChange={(e) => setFood(e.target.value)}
@@ -108,7 +108,7 @@ const RecipeGenerator: React.FC = () => {
                                         </div>
                                         <div className="flex flex-col">
                                             <label htmlFor="keywords" className="sr-only">
-                                                List ingreidents you'd like to use (Optional)
+                                                List ingreidents you'd like to use
                                             </label>
                                             <textarea
                                                 rows={7}
@@ -116,7 +116,7 @@ const RecipeGenerator: React.FC = () => {
                                                 onChange={(e) => setIngrieidents(e.target.value)}
                                                 name="keyWords"
                                                 id="keyWords"
-                                                placeholder="List ingreidents you'd like to use (Optional)"
+                                                placeholder="List ingreidents you'd like to use (needs atleast one)"
                                                 className="block w-full rounded-md bg-white border border-gray-400 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm px-4 py-2 placeholder-gray-500 my-2 text-gray-900"
                                             />
                                         </div>
@@ -156,12 +156,12 @@ const RecipeGenerator: React.FC = () => {
                                         </div>
 
                                         <button
-                                            className={`bg-orange-500 w-full hover:bg-orange-600 text-black font-bold mt-2 py-2 mb-6 px-4 rounded ${isGenerating || food === ""
+                                            className={`bg-orange-500 w-full hover:bg-orange-600 text-black font-bold mt-2 py-2 mb-6 px-4 rounded ${isGenerating || ingrieidents.trim() === ""
                                                 ? "cursor-not-allowed opacity-50"
                                                 : ""
                                                 }`}
                                             type="submit"
-                                            disabled={isGenerating || food === ""}
+                                            disabled={isGenerating}
                                         >
                                             {isGenerating ? "Generating..." : "Generate recipe"}
                                         </button>
