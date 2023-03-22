@@ -11,7 +11,11 @@ export const postRouter = createTRPCRouter({
                     createdAt: "desc"
                 },
                 include: {
-                    author: true, // Return all related author fields
+                    author: true,
+                    recipe: true,
+                    comments: true,
+                    
+
                 },
             });
         }
@@ -60,6 +64,31 @@ export const postRouter = createTRPCRouter({
             }
         }),
 
+    addComment: protectedProcedure
+        .input(
+            z.object({
+                comment: z.string(),
+                authorId: z.string(),
+                postId: z.string(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            try {
+                const post = await ctx.prisma.postComment.create({
+                    data: {
+                        comment: input.comment,
+                        authorId: input.authorId,
+                        postId: input.postId,
+                    }
+                });
+
+                return post;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }),
+
     getPostById: publicProcedure
         .input(
             z.object({
@@ -82,53 +111,50 @@ export const postRouter = createTRPCRouter({
         }),
 
     likePost: protectedProcedure
-        .input(z.object({ postId: z.string() }))
+        .input(
+            z.object({
+                postId: z.string(),
+                userId: z.string()
+            })
+        )
         .mutation(async ({ ctx, input }) => {
-            const session = await getSession();
-            const userId = session?.user?.id;
-            if (!userId) {
-                throw new Error("Not authenticated");
-            }
-
-            const like = await ctx.prisma.postLike.findFirst({
-                where: { postId: input.postId, userId },
-            });
-
-            if (like) {
-                await ctx.prisma.postLike.delete({ where: { id: like.id } });
-                return { success: true, message: "Post unliked" };
-            } else {
-                await ctx.prisma.postLike.create({
+            try {
+                const postLike = await ctx.prisma.postLike.create({
                     data: {
                         postId: input.postId,
-                        userId,
+                        userId: input.userId,
                     },
+
                 });
-                return { success: true, message: "Post liked" };
+                return postLike
+            }
+            catch (error) {
+                console.log(error);
             }
         }),
+
 
     unlikePost: protectedProcedure
-        .input(z.object({ postId: z.string() }))
+        .input(
+            z.object({
+                postId: z.string(),
+                userId: z.string()
+            })
+        )
         .mutation(async ({ ctx, input }) => {
-            const session = await getSession();
-            const userId = session?.user?.id;
-            if (!userId) {
-                throw new Error("Not authenticated");
+            try {
+                const deletedPostLike = await ctx.prisma.postLike.deleteMany({
+                    where: {
+                        postId: input.postId,
+                        userId: input.userId,
+                    },
+                });
+                return deletedPostLike;
             }
-
-            const like = await ctx.prisma.postLike.findFirst({
-                where: { postId: input.postId, userId },
-            });
-
-            if (!like) {
-                throw new Error("Post not liked");
+            catch (error) {
+                console.log(error);
             }
-
-            await ctx.prisma.postLike.delete({ where: { id: like.id } });
-            return { success: true, message: "Post unliked" };
-        }),
-
+        })
 
 
 

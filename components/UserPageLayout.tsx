@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState} from 'react'
 import { Post, User, Recipe } from "@prisma/client";
 import Header from '../components/Header';
 import Link from 'next/link';
 import { api } from '../src/utils/api';
 import { useSession } from 'next-auth/react';
+
 
 interface UserPageLayoutProps {
   user: User & { posts: Post[] };
@@ -15,9 +16,30 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
   const { data: session } = useSession();
 
   /* eslint-disable */
+  const utils = api.useContext();
+  const follow = api.follows.followUser.useMutation({
+    onMutate: async (newFollow) => {
+      await utils.post.getAll.cancel();
+      console.log("Followed by: " + newFollow.userId);
+    },
+    onSettled: async () => {
+      await utils.post.getAll.invalidate();
+    },
+  });
+
+  const unfollow = api.follows.unfollowUser.useMutation({
+    onMutate: async (deleteFollow) => {
+      await utils.post.getAll.cancel();
+      console.log("Unfollowed by: " + deleteFollow.userId);
+    },
+    onSettled: async () => {
+      await utils.post.getAll.invalidate();
+    },
+  });
+
   const handleFollow = async () => {
     try {
-      // await api.follows.followUser.useMutation({ userId: user?.id });
+      follow.mutate({ userId: user?.id, followerId: session?.user?.id as string });
       setIsFollowing(true);
     } catch (error) {
       console.error(error);
@@ -26,7 +48,7 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
 
   const handleUnfollow = async () => {
     try {
-      // await api.follows.unfollowUser.useMutation({ userId: user?.id );
+      unfollow.mutate({ userId: user?.id, followerId: session?.user?.id as string });
       setIsFollowing(false);
     } catch (error) {
       console.error(error);
@@ -56,7 +78,7 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
                 <p className="text-gray-500">{user.email}</p>
               </div>
               <div className="ml-10">
-              
+
                 {/* eslint-disable */!isFollowing && (
                   <button
                     className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-2 px-4 rounded mt-4"
@@ -73,7 +95,7 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
                     Unfollow
                   </button>
                 /* eslint-enable */)}
-                
+
               </div>
             </div>
           </div>

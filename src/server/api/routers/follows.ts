@@ -7,47 +7,42 @@ export const followsRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
+        followerId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const session = await getSession();
-      const followerId = session?.user?.id;
-      if (!followerId) {
-        throw new Error("Not authenticated");
+      try {
+        const follow = await ctx.prisma.follower.create({
+          data: {
+            userId: input.userId,
+            followerId: input.followerId,
+          },
+        });
+
+        return follow;
       }
-
-      const { userId } = input;
-
-      await ctx.prisma.follower.create({
-        data: {
-          userId,
-          followerId,
-        },
-      });
-
-      return { success: true, message: "User followed" };
+      catch (error) {
+        console.log(error);
+      }
     }),
 
   unfollowUser: protectedProcedure
     .input(
       z.object({
         userId: z.string(),
+        followerId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const session = await getSession();
-      const followerId = session?.user?.id;
-      if (!followerId) {
-        throw new Error("Not authenticated");
+      try {
+        const unfollow = await ctx.prisma.follower.deleteMany({
+          where: { userId: input.userId, followerId: input.followerId },
+        });
+        return unfollow;
       }
-
-      const { userId } = input;
-
-      await ctx.prisma.follower.deleteMany({
-        where: { userId, followerId },
-      });
-
-      return { success: true, message: "User unfollowed" };
+      catch (error) {
+        console.log(error);
+      };
     }),
 
   getFollowers: publicProcedure

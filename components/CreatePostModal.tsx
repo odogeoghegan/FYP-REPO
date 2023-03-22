@@ -119,6 +119,7 @@ const CreatePost: React.FC = () => {
   };
 
   const utils = api.useContext();
+  
   const uploadPost = api.post.create.useMutation({
     onMutate: async (newEntry) => {
       await utils.post.getAll.cancel();

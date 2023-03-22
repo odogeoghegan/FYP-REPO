@@ -5,6 +5,10 @@ import Link from 'next/link';
 import {
     BiDotsHorizontalRounded, BiHeart, BiCommentDots, BiPaperPlane, BiBookmark, BiHappy
 } from "react-icons/bi";
+import {
+    FaHeart
+} from "react-icons/fa"
+import { useSession } from 'next-auth/react';
 
 function Posts() {
     return (
@@ -16,6 +20,88 @@ export default Posts
 
 const Post: React.FC = () => {
     const { data: post, isLoading } = api.post.getAll.useQuery();
+    const { data: session } = useSession();
+    const [liked, setLiked] = useState<boolean>();
+    const [comment, setComment] = useState("");
+
+
+    const utils = api.useContext();
+    const uploadComment = api.post.addComment.useMutation({
+        onMutate: async (newComment) => {
+            await utils.post.getAll.cancel();
+            console.log("Added new comment: " + newComment.comment + " by " + newComment.authorId);
+        },
+        onSettled: async () => {
+            await utils.post.getAll.invalidate();
+        },
+    });
+
+    const like = api.post.likePost.useMutation({
+        onMutate: async (newlike) => {
+            await utils.post.getAll.cancel();
+            console.log("Added new like by: " + newlike.userId);
+        },
+        onSettled: async () => {
+            await utils.post.getAll.invalidate();
+        },
+    });
+
+    const unlike = api.post.unlikePost.useMutation({
+        onMutate: async (deletelike) => {
+            await utils.post.getAll.cancel();
+            console.log("Removed like by: " + deletelike.userId);
+        },
+        onSettled: async () => {
+            await utils.post.getAll.invalidate();
+        },
+    });
+
+
+
+    const handleComment = async (postId: string, e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        /* eslint-disable */
+        try {
+            uploadComment.mutate({
+                comment,
+                postId,
+                authorId: session?.user?.id as string,
+            });
+            setComment("");
+        }
+
+        catch (error) {
+            console.error("Error submitting form:", error);
+        }
+        /* eslint-enable */
+    };
+
+    const handleLike = async (postId: string) => {
+        try {
+            like.mutate({
+                postId,
+                userId: session?.user?.id as string
+            });
+            setLiked(true);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleUnlike = async (postId: string) => {
+        try {
+            unlike.mutate({
+                postId: postId,
+                userId: session?.user?.id as string
+            });
+            setLiked(false);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+
 
     if (isLoading) {
         return <div>Fetching posts...</div>;
@@ -36,6 +122,7 @@ const Post: React.FC = () => {
                             <BiDotsHorizontalRounded className='h-5 w-5' />
                         </div>
 
+
                         {/* image */}
                         <Link href={`/post/${entry.id}`}>
                             <img
@@ -48,7 +135,13 @@ const Post: React.FC = () => {
                         {/* Buttons */}
                         <div className='flex justify-between px-3 pt-3'>
                             <div className="flex space-x-4">
-                                <BiHeart className='btn' size="25" />
+
+                                {liked ? (
+                                    <FaHeart className='btn text-orange-500' size="25" onClick={() => handleUnlike(entry.id)} />
+                                ) : (
+                                    <BiHeart className='btn' size="25" onClick={() => handleLike(entry.id)} />
+                                )}
+
                                 <BiCommentDots className='btn' size="25" />
                                 <BiPaperPlane className='btn' size="25" />
                             </div>
@@ -65,13 +158,35 @@ const Post: React.FC = () => {
                         </div>
 
                         {/* Comments */}
+                        {entry.comments.length > 0 && (
+                            <div className="ml 10 h-20 overflow-y-scroll scrollbar-thumb-black scrollbar-thin">
+                                {entry.comments.map(comment => (
+                                    <div key={comment.id} className="flex items-center mb-2">
+                                        <img
+                                            // src={comment.author.image ?? ""}
+                                            className="rounded-full h-8 w-8 object-contain border p-1 mr-3 cursor-pointer"
+                                            alt=""
+                                        />
+                                        <div>
+                                            <Link className="font-bold cursor-pointer" href={`/user/${comment.authorId}`}>
+                                                {comment.authorId} 
+                                            </Link>
+                                            <p>{comment.comment}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Comment Input */}
-                        <form className="flex items-center p-3">
+                        <form className="flex items-center p-3" onSubmit={(e) => handleComment(entry.id, e)}>
                             <BiHappy className='h-6 w-6 cursor-pointer' />
-                            <input type={'text'} placeholder='Add a comment...'
-                                className='flex-1 border-none bg-gray-100 rounded-lg mx-1 focus:ring-0 outline-none' />
-                            <button className='bg-orange-500 hover:bg-orange-600 text-black font-semibold py-2 px-4 rounded'>Post</button>
+                            <input type="text" value={comment}
+                                onChange={e => setComment(e.target.value)}
+                                placeholder='Add a comment...'
+                                className='flex-1 border-none bg-gray-100 rounded-lg mx-1 focus:ring-0 outline-none'
+                            />
+                            <button type='submit' disabled={!comment.trim()} className='bg-orange-500 hover:bg-orange-600 text-black font-semibold py-2 px-4 rounded'>Post</button>
                         </form>
 
                     </div>

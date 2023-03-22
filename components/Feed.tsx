@@ -8,7 +8,6 @@ function Feed() {
     <section className=' col-span-2'>
     <div>
       <div>
-        feed
       </div>
       <Posts />
     </div>

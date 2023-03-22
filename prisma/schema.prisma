@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -36,7 +37,7 @@ model Session {
 
 model User {
   id            String        @id @default(cuid())
-  name          String?
+  name          String?       
   email         String?       @unique
   emailVerified DateTime?
   signupDate    DateTime      @default(now())
@@ -52,7 +53,7 @@ model User {
 
 model Post {
   id          String        @id @default(cuid())
-  title       String        @db.VarChar(100)
+  title       String        @db.VarChar(100) 
   description String?
   images      String[]
   authorId    String
