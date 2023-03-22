@@ -45,6 +45,10 @@ const RecipeGenerator: React.FC = () => {
           }),
         });
         setIsGenerating(false);
+        setFood("");
+        setIngrieidents("");
+        setMeal("");
+        setNumPeople("");
         const data = await res.json();
         console.log(data); 
         if (data.recipe) {
@@ -56,6 +60,7 @@ const RecipeGenerator: React.FC = () => {
         navigator.clipboard.writeText(recipe);
         setIsCopied(false);
         setOpen(false);
+        setRecipe("");
     };
 
     return status === "authenticated" ? (
