@@ -37,7 +37,7 @@ const generateRecipe = async ({
           }${ingrieidents ? `, with the following ingredients: ${ingrieidents}` : ""
           } that is to feed ${numPeople ?? 4} people.${
             meal ? `Make it a ${meal}.` : ""
-          } The recipe should list the ingredients with the quantities in metric system and then list all the steps. Make it as concise as possible The recipe should not contain any bad language and should also include some rough nutritional information like macros and calories at the end.`,
+          } The recipe should have a title and then list the ingredients with the quantities in metric system and then list all the steps. Make it as concise as possible The recipe should not contain any bad language and should also include some rough nutritional information like macros and calories at the end.`,
           max_tokens: 500,
           temperature: 0.5,
         }),
