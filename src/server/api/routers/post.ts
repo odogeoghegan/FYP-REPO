@@ -13,9 +13,18 @@ export const postRouter = createTRPCRouter({
                 include: {
                     author: true,
                     recipe: true,
-                    comments: true,
+                    comments: {
+                        include:{
+                            author: true,
+                        },
+                    },
+                    likes: {
+                        include:{
+                            user: true,
+                            post: true,
+                        }
+                    },
                     
-
                 },
             });
         }

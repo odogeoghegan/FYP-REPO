@@ -1,5 +1,5 @@
-import React, { useState} from 'react'
-import { Post, User, Recipe } from "@prisma/client";
+import React, { useEffect, useState} from 'react'
+import { Post, User, Follower } from "@prisma/client";
 import Header from '../components/Header';
 import Link from 'next/link';
 import { api } from '../src/utils/api';
@@ -7,13 +7,17 @@ import { useSession } from 'next-auth/react';
 
 
 interface UserPageLayoutProps {
-  user: User & { posts: Post[] };
+  user: User & { posts: Post[] } & {followers: Follower[]};
 }
 
 
 function UserPageLayout({ user }: UserPageLayoutProps) {
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const { data: session } = useSession();
+  const [isFollowing, setIsFollowing] = useState<boolean>(user.followers.some(u => u.followerId === session?.user?.id));
+ 
+
+  // console.log(user.followers)
+  console.log(user.followers.some(u => u.followerId === session?.user?.id))
 
   /* eslint-disable */
   const utils = api.useContext();
@@ -40,7 +44,7 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
   const handleFollow = async () => {
     try {
       follow.mutate({ userId: user?.id, followerId: session?.user?.id as string });
-      setIsFollowing(true);
+      await setIsFollowing(true);
     } catch (error) {
       console.error(error);
     }
@@ -49,12 +53,16 @@ function UserPageLayout({ user }: UserPageLayoutProps) {
   const handleUnfollow = async () => {
     try {
       unfollow.mutate({ userId: user?.id, followerId: session?.user?.id as string });
-      setIsFollowing(false);
+      await setIsFollowing(false);
     } catch (error) {
       console.error(error);
     }
   };
   /* eslint-enable */
+
+  useEffect(() => {
+    setIsFollowing(user.followers.some(u => u.followerId === session?.user?.id));
+  }, [user, session]);
 
 
   return (

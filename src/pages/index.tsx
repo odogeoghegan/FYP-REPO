@@ -11,6 +11,7 @@ import Feed from "../../components/Feed";
 
 
 
+
 const Home: NextPage = () => {
   return (
     <>
@@ -22,6 +23,7 @@ const Home: NextPage = () => {
       <Header />
       {/* Feed */}
       <Feed />
+ 
     </>
   );
 };

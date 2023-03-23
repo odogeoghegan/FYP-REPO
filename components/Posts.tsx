@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { api } from '../src/utils/api';
 import Link from 'next/link';
 
@@ -21,7 +21,9 @@ export default Posts
 const Post: React.FC = () => {
     const { data: post, isLoading } = api.post.getAll.useQuery();
     const { data: session } = useSession();
+
     const [liked, setLiked] = useState<boolean>();
+    
     const [comment, setComment] = useState("");
 
 
@@ -100,6 +102,12 @@ const Post: React.FC = () => {
         }
     };
 
+    // useEffect(() => {
+    //     if (post?.likes && session?.user) {
+    //       const isLiked = post.likes.some((like) => like.userId === session.user.id);
+    //       setLiked(isLiked);
+    //     }
+    //   }, [post, session]);
 
 
 
@@ -172,13 +180,13 @@ const Post: React.FC = () => {
                                 {entry.comments.map(comment => (
                                     <div key={comment.id} className="flex items-center mb-2">
                                         <img
-                                            // src={comment.author.image ?? ""}
+                                            src={comment.author.image ?? ""}
                                             className="rounded-full h-8 w-8 object-contain border p-1 mr-3 cursor-pointer"
                                             alt=""
                                         />
                                         <div>
                                             <Link className="font-bold cursor-pointer" href={`/user/${comment.authorId}`}>
-                                                {comment.authorId}
+                                                {comment.author.name}
                                             </Link>
                                             <p>{comment.comment}</p>
                                         </div>

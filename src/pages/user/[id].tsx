@@ -1,6 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
-import { PrismaClient, Post, User } from '@prisma/client';
+import { PrismaClient, Post, User, Follower } from '@prisma/client';
 import UserPageLayout from '../../../components/UserPageLayout';
 
 // Create a new Prisma client instance
@@ -28,6 +28,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const user = await prisma.user.findUnique({
     where: { id: id as string },
     include: { 
+      followers: true,
+      followings: true,
       posts: {
         include: { author: true },
         orderBy: { createdAt: 'desc' }, 
@@ -54,7 +56,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 /* eslint-enable */
 
-function UserPage({ user }: { user: User & { posts: Post[] } }) {
+function UserPage({ user }: { user: User & { posts: Post[] } & {followers: Follower[]} }) {
   // Get the router instance
   const router = useRouter();
 

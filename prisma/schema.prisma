@@ -79,6 +79,8 @@ model PostLike {
   createdAt DateTime @default(now())
   post      Post     @relation(fields: [postId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, postId])
 }
 
 model PostComment {
@@ -98,6 +100,8 @@ model Follower {
   createdAt  DateTime @default(now())
   follower   User     @relation("UserFollowing", fields: [followerId], references: [id])
   user       User     @relation("UserFollower", fields: [userId], references: [id])
+
+  @@unique([userId, followerId])
 }
 
 model Example {
