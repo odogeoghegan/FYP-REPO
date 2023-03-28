@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../src/utils/api';
+import { Post, User, Follower, PostLike } from "@prisma/client";
 import Link from 'next/link';
 
 import {
@@ -22,7 +23,7 @@ const Post: React.FC = () => {
     const { data: post, isLoading } = api.post.getAll.useQuery();
     const { data: session } = useSession();
 
-    const [liked, setLiked] = useState<boolean>();
+    const [liked, setLiked] = useState<{ [key: string]: boolean }>({});
     
     const [comment, setComment] = useState("");
 
@@ -84,7 +85,7 @@ const Post: React.FC = () => {
                 postId,
                 userId: session?.user?.id as string
             });
-            setLiked(true);
+            setLiked((prevLikes) => ({ ...prevLikes, [postId]: true }));
         } catch (error) {
             console.error(error);
         }
@@ -96,7 +97,7 @@ const Post: React.FC = () => {
                 postId: postId,
                 userId: session?.user?.id as string
             });
-            setLiked(false);
+            setLiked((prevLikes) => ({ ...prevLikes, [postId]: false }));
         } catch (error) {
             console.error(error);
         }
@@ -150,7 +151,7 @@ const Post: React.FC = () => {
                         <div className='flex justify-between px-3 pt-3'>
                             <div className="flex space-x-4">
 
-                                {liked ? (
+                                {liked[entry.id] ? (
                                     /* eslint-disable */
                                     <FaHeart className='btn text-orange-500' size="25" onClick={() => handleUnlike(entry.id)} />
                                 ) : (

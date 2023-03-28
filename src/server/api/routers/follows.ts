@@ -82,6 +82,23 @@ export const followsRouter = createTRPCRouter({
 
       return following.map((follow) => follow.user);
     }),
+    
+    getAllUser: publicProcedure.query(async ({ ctx }) => {
+      try {
+          return await ctx.prisma.user.findMany({
+              orderBy: {
+                  signupDate: "desc"
+              },
+              include: {
+                followers: true,
+                followings: true,
+              },
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }),
 
 
 

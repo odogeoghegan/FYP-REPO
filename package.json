@@ -23,6 +23,7 @@
     "@trpc/server": "^10.8.1",
     "@types/react-query": "^1.2.9",
     "algoliasearch": "^4.15.0",
+    "faker": "^6.6.6",
     "next": "13.1.2",
     "next-auth": "^4.19.2",
     "react": "18.2.0",
@@ -35,6 +36,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/node": "^18.11.18",
     "@types/node-fetch": "^2.6.2",
     "@types/prettier": "^2.7.2",
