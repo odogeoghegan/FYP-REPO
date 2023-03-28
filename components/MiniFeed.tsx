@@ -45,7 +45,7 @@ function MiniFeed() {
             <Link href={`/user/${suggestion.user.id}`}>
               <h2 className='font-semibold text-sm cursor-pointer'>{suggestion.user.name}</h2>
             </Link>
-            <h3 className='text-gray-400 text-xs'>Contact at: {suggestion.user.email}</h3>
+            <h3 className='text-gray-400 text-xs'>Contact at: {suggestion.user.signupDate.toUTCString()}</h3>
           </div>
           <button className='text-orange-500'>Follow</button>
         </div>
