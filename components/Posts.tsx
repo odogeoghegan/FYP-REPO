@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../src/utils/api';
-import { Post, User, Follower, PostLike } from "@prisma/client";
 import Link from 'next/link';
 
 import {
