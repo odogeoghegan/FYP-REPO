@@ -9,14 +9,14 @@ function MiniProfile() {
 
   return (
     <div className='flex items-center justify-between mt-14 ml-10'>
-      <Link href={`/user/${session?.user?.id}` ?? ""}>
+      <Link /* eslint-disable */ href={`/user/${session?.user?.id}`} /* eslint-enable */>
         <img className='w-16 h-16 mr-2 rounded-full border p-[2px]'
           src={session?.user?.image ?? ""}
           alt=""
         />
       </Link>
       <div>
-        <Link href={`/user/${session?.user?.id}` ?? ""}>
+        <Link /* eslint-disable */ href={`/user/${session?.user?.id}` /* eslint-enable */}>
           <h2 className='font-bold cursor-pointer'>{session?.user?.name}</h2>
         </Link>
         <h3 className='text-sm text-gray-400'>Welcome to Munchies</h3>
