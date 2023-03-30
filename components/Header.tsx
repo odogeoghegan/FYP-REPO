@@ -64,7 +64,7 @@ function Header() {
 
           {/* Right */}
           <div className="flex items-center justify-end space-x-4">
-            <BiMenu className="h-10 md:hidden cursor-pointer hover:scale-150 transition-all duration-150 ease-out" size="30" />
+            <BiMenu className="h-10 md:hidden cursor-pointer hover:scale-150 transition-all duration-150 ease-out" size="30" aria-labelledby='home' />
             <Link href="/">
               <BiHome className="navBtn" size="30" />
             </Link>

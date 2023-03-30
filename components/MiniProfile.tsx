@@ -9,6 +9,8 @@ function MiniProfile() {
 
   return (
     <div className='flex items-center justify-between mt-14 ml-10'>
+      {session ? (
+        <>
       <Link /* eslint-disable */ href={`/user/${session?.user?.id}`} /* eslint-enable */>
         <img className='w-16 h-16 mr-2 rounded-full border p-[2px]'
           src={session?.user?.image ?? ""}
@@ -22,6 +24,10 @@ function MiniProfile() {
         <h3 className='text-sm text-gray-400'>Welcome to Munchies</h3>
       </div>
       <button className='text-orange-500 text-sm pl-4 font-semibold' onClick={() => void signOut()}>Sign Out</button>
+      </>
+      ) : (
+        <h3 className='text-sm text-Black'>Join The Munchies Community Sign-Up today!</h3>
+      )}
     </div>
   )
 }

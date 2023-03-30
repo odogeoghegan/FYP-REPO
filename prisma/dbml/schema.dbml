@@ -1,0 +1,142 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Account {
+  id String [pk]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  id String [pk]
+  name String
+  email String [unique]
+  emailVerified DateTime
+  signupDate DateTime [default: `now()`, not null]
+  image String
+  accounts Account [not null]
+  followings Follower [not null]
+  followers Follower [not null]
+  posts Post [not null]
+  comments PostComment [not null]
+  likes PostLike [not null]
+  sessions Session [not null]
+}
+
+Table Post {
+  id String [pk]
+  title String [not null]
+  description String
+  images String[] [not null]
+  authorId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  author User [not null]
+  comments PostComment [not null]
+  likes PostLike [not null]
+  recipe Recipe
+}
+
+Table Recipe {
+  id String [pk]
+  postId String [unique, not null]
+  ingredients String[] [not null]
+  steps String[] [not null]
+  post Post [not null]
+}
+
+Table PostLike {
+  id String [pk]
+  userId String [not null]
+  postId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  post Post [not null]
+  user User [not null]
+
+  indexes {
+    (userId, postId) [unique]
+  }
+}
+
+Table PostComment {
+  id String [pk]
+  postId String [not null]
+  comment String [not null]
+  authorId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  author User [not null]
+  POST Post [not null]
+}
+
+Table Follower {
+  id String [pk]
+  userId String [not null]
+  followerId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  follower User [not null]
+  user User [not null]
+
+  indexes {
+    (userId, followerId) [unique]
+  }
+}
+
+Table Example {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  message String [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: Post.authorId > User.id
+
+Ref: Recipe.postId - Post.id
+
+Ref: PostLike.postId > Post.id
+
+Ref: PostLike.userId > User.id
+
+Ref: PostComment.authorId > User.id
+
+Ref: PostComment.postId > Post.id
+
+Ref: Follower.followerId > User.id
+
+Ref: Follower.userId > User.id
