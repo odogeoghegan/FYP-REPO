@@ -139,6 +139,15 @@ const Post: React.FC = () => {
                                         </div>
                                     </Link>
                                 )}
+
+                                {/* image */}
+                                <Link href={`/post/${entry.id}`}>
+                                    <img
+                                        src={entry.images[0]}
+                                        className="object-cover w-full h-[32rem] cursor-pointer"
+                                        alt="postImage"
+                                    />
+                                </Link>
                             </>
                         ) : (
                             <>
@@ -153,16 +162,17 @@ const Post: React.FC = () => {
                                         <p>Sign in to view Recipe</p>
                                     </div>
                                 )}
+
+                                {/* image */}
+
+                                <img
+                                    src={entry.images[0]}
+                                    className="object-cover w-full h-[32rem] cursor-pointer"
+                                    alt="postImage"
+                                />
                             </>
                         )}
-                        {/* image */}
-                        <Link href={`/post/${entry.id}`}>
-                            <img
-                                src={entry.images[0]}
-                                className="object-cover w-full h-[32rem] cursor-pointer"
-                                alt="postImage"
-                            />
-                        </Link>
+
 
                         {/* Buttons */}
                         {session ? (
