@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../src/utils/api';
 import Link from 'next/link';
-
 import {
     BiDotsHorizontalRounded, BiHeart, BiCommentDots, BiPaperPlane, BiBookmark, BiHappy
 } from "react-icons/bi";

@@ -23,7 +23,7 @@ function MiniProfile() {
         </Link>
         <h3 className='text-sm text-gray-400'>Welcome to Munchies</h3>
       </div>
-      <button className='text-orange-500 text-sm pl-4 font-semibold' onClick={() => void signOut()}>Sign Out</button>
+      <Link href="/"><button className='text-orange-500 text-sm pl-4 font-semibold' onClick={() => void signOut()}>Sign Out</button></Link>
       </>
       ) : (
         <h3 className='text-sm text-Black'>Join The Munchies Community Sign-Up today!</h3>

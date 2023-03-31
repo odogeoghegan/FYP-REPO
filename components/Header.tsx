@@ -66,7 +66,7 @@ function Header() {
           <div className="flex items-center justify-end space-x-4">
             <BiMenu className="h-10 md:hidden cursor-pointer hover:scale-150 transition-all duration-150 ease-out" size="30" aria-labelledby='home' />
             <Link href="/">
-              <BiHome className="navBtn" size="30" />
+              <BiHome className="navBtn" aria-label="home button" aria-describedby="home" size="30" />
             </Link>
             {session ? (
               <>
@@ -74,7 +74,7 @@ function Header() {
                 <BiPlusCircle onClick={() => setOpenCreatePost(true)} className="navBtn" size="30" />
                 <BiGroup className="navBtn" size="30" />
                 <BiHeart className="navBtn" size="30" />
-                <img onClick={() => void signOut()} src={session?.user?.image ?? ""} alt="profile picture" className="h-12 w-12 rounded-full object-contain border p-1 cursor-pointer" />
+                <Link href="/"><img onClick={() => void signOut()} src={session?.user?.image ?? ""} alt="profile picture" className="h-12 w-12 rounded-full object-contain border p-1 cursor-pointer" /></Link>
               </>
             ) : (
               <button onClick={() => void signIn()}>Sign In</button>

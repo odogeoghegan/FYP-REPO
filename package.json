@@ -24,6 +24,7 @@
     "@types/react-query": "^1.2.9",
     "algoliasearch": "^4.15.0",
     "faker": "^6.6.6",
+    "flowbite": "^1.6.4",
     "next": "13.1.2",
     "next-auth": "^4.19.2",
     "react": "18.2.0",
