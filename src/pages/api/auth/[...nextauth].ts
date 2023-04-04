@@ -25,10 +25,10 @@ export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
-    FacebookProvider({
-      clientId: env.FACEBOOK_CLIENT_ID,
-      clientSecret: env.FACEBOOK_CLIENT_SECRET,
-    }),
+    // FacebookProvider({
+    //   clientId: env.FACEBOOK_CLIENT_ID,
+    //   clientSecret: env.FACEBOOK_CLIENT_SECRET,
+    // }),
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,

@@ -64,9 +64,9 @@ function Header() {
 
           {/* Right */}
           <div className="flex items-center justify-end space-x-4">
-            <BiMenu className="h-10 md:hidden cursor-pointer hover:scale-150 transition-all duration-150 ease-out" size="30" aria-labelledby='home' />
+            <BiMenu className="h-10 md:hidden cursor-pointer hover:scale-150 transition-all duration-150 ease-out" size="30"  />
             <Link href="/">
-              <BiHome className="navBtn" aria-label="home button" aria-describedby="home" size="30" />
+              <BiHome className="navBtn" aria-label="home page button" aria-describedby="default home page with post feed" size="30" />
             </Link>
             {session ? (
               <>
